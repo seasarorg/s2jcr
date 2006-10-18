@@ -18,8 +18,7 @@ package org.seasar.jcr;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 
-public abstract class RepositoryFactory
-{
+public abstract class RepositoryFactory {
     /**
      * The actual repository.
      */
@@ -35,10 +34,8 @@ public abstract class RepositoryFactory
     /**
      * @return Returns the repository.
      */
-    public Repository getRepository() throws RepositoryException
-    {
-        if (repository != null)
-        {
+    public Repository getRepository() throws RepositoryException {
+        if (repository != null) {
             return repository;
         }
 
@@ -48,10 +45,10 @@ public abstract class RepositoryFactory
     }
 
     /**
-     * @param repository The repository to set.
+     * @param repository
+     *            The repository to set.
      */
-    public void setRepository(Repository repository)
-    {
+    public void setRepository(Repository repository) {
         this.repository = repository;
     }
 

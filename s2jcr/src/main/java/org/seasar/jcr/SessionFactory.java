@@ -22,9 +22,7 @@ import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-
-public interface SessionFactory
-{
+public interface SessionFactory {
 
     public abstract Session getSession() throws RepositoryException;
 

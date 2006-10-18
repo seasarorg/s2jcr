@@ -27,8 +27,7 @@ import org.apache.jackrabbit.core.config.ConfigurationException;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
 import org.seasar.jcr.RepositoryFactory;
 
-public class JackrabbitRepositoryFactory extends RepositoryFactory
-{
+public class JackrabbitRepositoryFactory extends RepositoryFactory {
     /**
      * Logger for this class
      */
@@ -45,35 +44,28 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory
 
     private String home;
 
-    public JackrabbitRepositoryFactory(String configuration, String home)
-    {
+    public JackrabbitRepositoryFactory(String configuration, String home) {
         this.configuration = configuration;
         this.home = home;
     }
 
-    protected Repository createRepository() throws RepositoryException
-    {
-        try
-        {
+    protected Repository createRepository() throws RepositoryException {
+        try {
             // return Jackrabbit repository.
             return RepositoryImpl.create(repositoryConfig);
-        }
-        catch (RepositoryException e)
-        {
+        } catch (RepositoryException e) {
             log.error("Could not create Jackrabbit's repository. ", e);
             throw new RepositoryException(
                     "Could not create Jackrabbit's repository. ", e);
         }
     }
 
-    protected void resolveConfigurationResource() throws RepositoryException
-    {
+    protected void resolveConfigurationResource() throws RepositoryException {
         // read the configuration object
         if (repositoryConfig != null)
             return;
 
-        if (this.configuration == null)
-        {
+        if (this.configuration == null) {
             if (log.isDebugEnabled())
                 log
                         .debug("no configuration resource specified, using the default one:"
@@ -81,8 +73,7 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory
             configuration = DEFAULT_CONF_FILE;
         }
 
-        if (home == null)
-        {
+        if (home == null) {
             if (log.isDebugEnabled())
                 log
                         .debug("no repository home dir specified, using the default one:"
@@ -90,13 +81,10 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory
             home = DEFAULT_REP_DIR;
         }
 
-        try
-        {
+        try {
             repositoryConfig = RepositoryConfig.create(configuration, new File(
                     home).getAbsolutePath());
-        }
-        catch (ConfigurationException e)
-        {
+        } catch (ConfigurationException e) {
             log.error("Could not create Jackrabbit's repository config. ", e);
             throw new RepositoryException(
                     "Could not create Jackrabbit's repository config. ", e);
@@ -105,13 +93,11 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory
 
     /**
      * Shutdown method.
-     *
+     * 
      */
-    public void destroy() throws RepositoryException
-    {
+    public void destroy() throws RepositoryException {
         Repository repo = getRepository();
-        if (repo instanceof RepositoryImpl)
-        {
+        if (repo instanceof RepositoryImpl) {
             ((RepositoryImpl) repo).shutdown();
         }
         log.error("Could not shutdown the repository.");
@@ -122,32 +108,30 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory
     /**
      * @return Returns the configuration.
      */
-    public String getConfiguration()
-    {
+    public String getConfiguration() {
         return configuration;
     }
 
     /**
-     * @param configuration The configuration to set.
+     * @param configuration
+     *            The configuration to set.
      */
-    public void setConfiguration(String configuration)
-    {
+    public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
 
     /**
      * @return Returns the home.
      */
-    public String getHome()
-    {
+    public String getHome() {
         return home;
     }
 
     /**
-     * @param home The home to set.
+     * @param home
+     *            The home to set.
      */
-    public void setHome(String home)
-    {
+    public void setHome(String home) {
         this.home = home;
     }
 

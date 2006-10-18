@@ -35,8 +35,7 @@ import org.seasar.jcr.RepositoryFactory;
 import org.seasar.jcr.SessionFactory;
 import org.seasar.jcr.util.JCRUtil;
 
-public class SessionFactoryImpl implements SessionFactory
-{
+public class SessionFactoryImpl implements SessionFactory {
     /**
      * Logger for this class
      */
@@ -60,17 +59,15 @@ public class SessionFactoryImpl implements SessionFactory
      * @param repository
      * @param workspaceName
      * @param credentials
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
     public SessionFactoryImpl(Repository repository, String workspaceName,
-            Credentials credentials) throws RepositoryException
-    {
+            Credentials credentials) throws RepositoryException {
         this.repository = repository;
         this.workspaceName = workspaceName;
         this.credentials = credentials;
 
-        if (getRepository() == null)
-        {
+        if (getRepository() == null) {
             throw new IllegalArgumentException("repository is required");
         }
     }
@@ -81,41 +78,38 @@ public class SessionFactoryImpl implements SessionFactory
      * @param repository
      * @param workspaceName
      * @param credentials
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
-    public SessionFactoryImpl(Repository repository) throws RepositoryException
-    {
+    public SessionFactoryImpl(Repository repository) throws RepositoryException {
         this(repository, null, null);
     }
 
     /**
      * Empty constructor.
      * 
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
-    public SessionFactoryImpl() throws RepositoryException
-    {
+    public SessionFactoryImpl() throws RepositoryException {
         this((Repository) null);
     }
 
     public SessionFactoryImpl(RepositoryFactory repositoryFactory,
             String workspaceName, Credentials credentials)
-            throws RepositoryException
-    {
+            throws RepositoryException {
         this(repositoryFactory.getRepository(), workspaceName, credentials);
     }
 
     public SessionFactoryImpl(RepositoryFactory repositoryFactory)
-            throws RepositoryException
-    {
+            throws RepositoryException {
         this(repositoryFactory, null, null);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getSession()
      */
-    public Session getSession() throws RepositoryException
-    {
+    public Session getSession() throws RepositoryException {
         return addListeners(repository.login(credentials, workspaceName));
     }
 
@@ -127,10 +121,8 @@ public class SessionFactoryImpl implements SessionFactory
      *            JCR session
      * @return the listened session
      */
-    protected Session addListeners(Session session) throws RepositoryException
-    {
-        if (eventListeners != null && eventListeners.length > 0)
-        {
+    protected Session addListeners(Session session) throws RepositoryException {
+        if (eventListeners != null && eventListeners.length > 0) {
             Workspace ws = session.getWorkspace();
             ObservationManager manager = ws.getObservationManager();
             if (log.isDebugEnabled())
@@ -138,8 +130,7 @@ public class SessionFactoryImpl implements SessionFactory
                         + Arrays.asList(eventListeners).toString()
                         + " for session " + session);
 
-            for (int i = 0; i < eventListeners.length; i++)
-            {
+            for (int i = 0; i < eventListeners.length; i++) {
                 manager.addEventListener(eventListeners[i].getListener(),
                         eventListeners[i].getEventTypes(), eventListeners[i]
                                 .getAbsPath(), eventListeners[i].isDeep(),
@@ -151,20 +142,22 @@ public class SessionFactoryImpl implements SessionFactory
         return session;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getEventListeners()
      */
-    public EventListenerDefinition[] getEventListeners()
-    {
+    public EventListenerDefinition[] getEventListeners() {
         return eventListeners;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#setEventListeners(com.marevol.utils.jcr.EventListenerDefinition[])
      */
     public void setEventListeners(
-            EventListenerDefinition[] eventListenerDefinitions)
-    {
+            EventListenerDefinition[] eventListenerDefinitions) {
         if (eventListeners != null && eventListeners.length > 0
                 && !JCRUtil.supportsObservation(getRepository()))
             throw new IllegalArgumentException(
@@ -174,11 +167,12 @@ public class SessionFactoryImpl implements SessionFactory
         this.eventListeners = eventListenerDefinitions;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#destroy()
      */
-    public void destroy() throws RepositoryException
-    {
+    public void destroy() throws RepositoryException {
         unregisterNamespaces();
     }
 
@@ -187,16 +181,13 @@ public class SessionFactoryImpl implements SessionFactory
      * 
      * @throws RepositoryException
      */
-    protected void registerNamespaces() throws RepositoryException
-    {
+    protected void registerNamespaces() throws RepositoryException {
 
-        if (namespaces == null || namespaces.isEmpty())
-        {
+        if (namespaces == null || namespaces.isEmpty()) {
             return;
         }
 
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("registering custom namespaces " + namespaces);
         }
         NamespaceRegistry registry = getSession().getWorkspace()
@@ -211,14 +202,11 @@ public class SessionFactoryImpl implements SessionFactory
         Arrays.sort(prefixes);
 
         // search occurences
-        for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();)
-        {
+        for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();) {
             String prefix = (String) iter.next();
             int position = Arrays.binarySearch(prefixes, prefix);
-            if (position >= 0)
-            {
-                if (log.isDebugEnabled())
-                {
+            if (position >= 0) {
+                if (log.isDebugEnabled()) {
                     log.debug("prefix " + prefix
                             + " was already registered; unregistering it");
                 }
@@ -230,8 +218,7 @@ public class SessionFactoryImpl implements SessionFactory
         }
 
         // do the registration
-        for (Iterator iter = namespaces.entrySet().iterator(); iter.hasNext();)
-        {
+        for (Iterator iter = namespaces.entrySet().iterator(); iter.hasNext();) {
             Map.Entry namespace = (Map.Entry) iter.next();
             registry.registerNamespace((String) namespace.getKey(),
                     (String) namespace.getValue());
@@ -242,38 +229,31 @@ public class SessionFactoryImpl implements SessionFactory
      * Removes the namespaces.
      * 
      */
-    protected void unregisterNamespaces() throws RepositoryException
-    {
+    protected void unregisterNamespaces() throws RepositoryException {
 
-        if (namespaces == null || namespaces.isEmpty())
-        {
+        if (namespaces == null || namespaces.isEmpty()) {
             return;
         }
 
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("unregistering custom namespaces " + namespaces);
         }
 
         NamespaceRegistry registry = getSession().getWorkspace()
                 .getNamespaceRegistry();
 
-        for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();)
-        {
+        for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();) {
             String prefix = (String) iter.next();
             registry.unregisterNamespace(prefix);
         }
 
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("reverting back overwritten namespaces "
                     + overwrittenNamespaces);
         }
-        if (overwrittenNamespaces != null)
-        {
+        if (overwrittenNamespaces != null) {
             for (Iterator iter = overwrittenNamespaces.entrySet().iterator(); iter
-                    .hasNext();)
-            {
+                    .hasNext();) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 registry.registerNamespace((String) entry.getKey(),
                         (String) entry.getValue());
@@ -281,59 +261,64 @@ public class SessionFactoryImpl implements SessionFactory
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getRepository()
      */
-    public Repository getRepository()
-    {
+    public Repository getRepository() {
         return repository;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#setRepository(javax.jcr.Repository)
      */
-    public void setRepository(Repository repository)
-    {
+    public void setRepository(Repository repository) {
         this.repository = repository;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getWorkspaceName()
      */
-    public String getWorkspaceName()
-    {
+    public String getWorkspaceName() {
         return workspaceName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#setWorkspaceName(java.lang.String)
      */
-    public void setWorkspaceName(String workspaceName)
-    {
+    public void setWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getCredentials()
      */
-    public Credentials getCredentials()
-    {
+    public Credentials getCredentials() {
         return credentials;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#setCredentials(javax.jcr.Credentials)
      */
-    public void setCredentials(Credentials credentials)
-    {
+    public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
     }
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj instanceof SessionFactoryImpl)
@@ -345,8 +330,7 @@ public class SessionFactoryImpl implements SessionFactory
     /**
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = 17;
         result = 37 * result + repository.hashCode();
         // add the optional params (can be null)
@@ -361,8 +345,7 @@ public class SessionFactoryImpl implements SessionFactory
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString()
-    {
+    public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("SessionFactory for ");
         buffer.append(getRepositoryInfo());
@@ -376,8 +359,7 @@ public class SessionFactoryImpl implements SessionFactory
      * 
      * @return
      */
-    private String getRepositoryInfo()
-    {
+    private String getRepositoryInfo() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(getRepository().getDescriptor(Repository.REP_NAME_DESC));
         buffer.append(" ");
@@ -386,19 +368,21 @@ public class SessionFactoryImpl implements SessionFactory
         return buffer.toString();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#getNamespaces()
      */
-    public Map getNamespaces()
-    {
+    public Map getNamespaces() {
         return namespaces;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.marevol.utils.jcr.impl.SessionFactory#setNamespaces(java.util.Map)
      */
-    public void setNamespaces(Map namespaces)
-    {
+    public void setNamespaces(Map namespaces) {
         this.namespaces = namespaces;
     }
 

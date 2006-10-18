@@ -19,23 +19,25 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
 
 /**
- * Transport class used for registering event types inside a workspace. It contains defaults for
- * all properties except the listener (obviously):
+ * Transport class used for registering event types inside a workspace. It
+ * contains defaults for all properties except the listener (obviously):
  * <ol>
  * <li> absPath = "/" </li>
- * <li> eventTypes = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED </li>
- * <li> isDeep = true </li> 
+ * <li> eventTypes = Event.NODE_ADDED | Event.NODE_REMOVED |
+ * Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED </li>
+ * <li> isDeep = true </li>
  * <li> uuid = null </li>
  * <li> nodeTypeName = null </li>
  * <li> noLocal = false </li>
  * </ol>
  * 
- * @see javax.jcr.observation.ObservationManager#addEventListener(javax.jcr.observation.EventListener, int, java.lang.String, boolean, java.lang.String[], java.lang.String[], boolean)
+ * @see javax.jcr.observation.ObservationManager#addEventListener(javax.jcr.observation.EventListener,
+ *      int, java.lang.String, boolean, java.lang.String[], java.lang.String[],
+ *      boolean)
  * @author Costin Leau
- *
+ * 
  */
-public class EventListenerDefinition
-{
+public class EventListenerDefinition {
 
     private EventListener listener;
 
@@ -56,112 +58,105 @@ public class EventListenerDefinition
     /**
      * @return Returns the absPath.
      */
-    public String getAbsPath()
-    {
+    public String getAbsPath() {
         return absPath;
     }
 
     /**
-     * @param absPath The absPath to set.
+     * @param absPath
+     *            The absPath to set.
      */
-    public void setAbsPath(String absPath)
-    {
+    public void setAbsPath(String absPath) {
         this.absPath = absPath;
     }
 
     /**
      * @return Returns the eventTypes.
      */
-    public int getEventTypes()
-    {
+    public int getEventTypes() {
         return eventTypes;
     }
 
     /**
-     * @param eventTypes The eventTypes to set.
+     * @param eventTypes
+     *            The eventTypes to set.
      */
-    public void setEventTypes(int eventTypes)
-    {
+    public void setEventTypes(int eventTypes) {
         this.eventTypes = eventTypes;
     }
 
     /**
      * @return Returns the isDeep.
      */
-    public boolean isDeep()
-    {
+    public boolean isDeep() {
         return isDeep;
     }
 
     /**
-     * @param isDeep The isDeep to set.
+     * @param isDeep
+     *            The isDeep to set.
      */
-    public void setDeep(boolean isDeep)
-    {
+    public void setDeep(boolean isDeep) {
         this.isDeep = isDeep;
     }
 
     /**
      * @return Returns the listener.
      */
-    public EventListener getListener()
-    {
+    public EventListener getListener() {
         return listener;
     }
 
     /**
-     * @param listener The listener to set.
+     * @param listener
+     *            The listener to set.
      */
-    public void setListener(EventListener listener)
-    {
+    public void setListener(EventListener listener) {
         this.listener = listener;
     }
 
     /**
      * @return Returns the nodeTypeName.
      */
-    public String[] getNodeTypeName()
-    {
+    public String[] getNodeTypeName() {
         return nodeTypeName;
     }
 
     /**
-     * @param nodeTypeName The nodeTypeName to set.
+     * @param nodeTypeName
+     *            The nodeTypeName to set.
      */
-    public void setNodeTypeName(String[] nodeTypeName)
-    {
+    public void setNodeTypeName(String[] nodeTypeName) {
         this.nodeTypeName = nodeTypeName;
     }
 
     /**
      * @return Returns the noLocal.
      */
-    public boolean isNoLocal()
-    {
+    public boolean isNoLocal() {
         return noLocal;
     }
 
     /**
-     * @param noLocal The noLocal to set.
+     * @param noLocal
+     *            The noLocal to set.
      */
-    public void setNoLocal(boolean noLocal)
-    {
+    public void setNoLocal(boolean noLocal) {
         this.noLocal = noLocal;
     }
 
     /**
      * @return Returns the uuid.
      */
-    public String[] getUuid()
-    {
+    public String[] getUuid() {
         return uuid;
     }
 
     /**
-     * @param uuid The uuid to set.
+     * @param uuid
+     *            The uuid to set.
      */
-    public void setUuid(String[] uuid)
-    {
+    public void setUuid(String[] uuid) {
         this.uuid = uuid;
     }
 
