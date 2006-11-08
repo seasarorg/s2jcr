@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.Credentials;
+import javax.jcr.NamespaceException;
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -181,8 +182,7 @@ public class SessionFactoryImpl implements SessionFactory {
      * 
      * @throws RepositoryException
      */
-    protected void registerNamespaces() throws RepositoryException {
-
+    public void registerNamespaces() throws RepositoryException {
         if (namespaces == null || namespaces.isEmpty()) {
             return;
         }
@@ -212,16 +212,27 @@ public class SessionFactoryImpl implements SessionFactory {
                 }
                 // save old namespace
                 overwrittenNamespaces.put(prefix, registry.getURI(prefix));
-                // unregister the namespace
-                registry.unregisterNamespace(prefix);
+                try {
+                    // unregister the namespace
+                    registry.unregisterNamespace(prefix);
+                } catch (NamespaceException e) {
+                    log
+                            .warn("Could not unregister the namespace: "
+                                    + prefix, e);
+                }
             }
         }
 
         // do the registration
         for (Iterator iter = namespaces.entrySet().iterator(); iter.hasNext();) {
             Map.Entry namespace = (Map.Entry) iter.next();
-            registry.registerNamespace((String) namespace.getKey(),
-                    (String) namespace.getValue());
+            try {
+                registry.registerNamespace((String) namespace.getKey(),
+                        (String) namespace.getValue());
+            } catch (NamespaceException e) {
+                log.warn("Could not register the namespace: "
+                        + namespace.getKey(), e);
+            }
         }
     }
 
