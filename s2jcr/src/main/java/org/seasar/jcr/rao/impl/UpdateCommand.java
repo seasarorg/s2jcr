@@ -65,9 +65,10 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
 
                 Node node = queryResultNodeIterator.nextNode();                    
 
+                //TODO refactoring
                 for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
                     String propertyName = (String) ite.next();
-                    if (dtoDesc.isPropertyField(propertyName)) {
+                    if (!dtoDesc.isAnnotationField(propertyName)) {
                             
                         Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
                         node.setProperty(propertyName, ValueConverter.convert(propertyValue));                        

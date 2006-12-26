@@ -36,6 +36,6 @@ public interface JCRDtoDesc {
 
     public abstract BeanDesc getBeanDesc();
 
-    public abstract boolean isPropertyField(String field);
+    public abstract boolean isAnnotationField(String field);
     
 }

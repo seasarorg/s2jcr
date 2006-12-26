@@ -59,7 +59,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
              
             for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
                 String propertyName = (String) ite.next();
-                if (dtoDesc.isPropertyField(propertyName)) {
+                if (!dtoDesc.isAnnotationField(propertyName)) { 
                         
                     Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
                     baseNode.setProperty(propertyName, ValueConverter.convert(propertyValue));                        

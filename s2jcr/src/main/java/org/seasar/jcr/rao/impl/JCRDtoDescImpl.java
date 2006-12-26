@@ -109,7 +109,7 @@ public class JCRDtoDescImpl implements JCRDtoDesc {
     /* (non-Javadoc)
      * @see org.seasar.jcr.JCRDtoDesc#isPropertyField()
      */
-    public boolean isPropertyField(String field) {
+    public boolean isAnnotationField(String field) {
         
         //TODO dtoにfactoryがきた場合の対応
         return (PathName.equals(field)) ? true : false;
