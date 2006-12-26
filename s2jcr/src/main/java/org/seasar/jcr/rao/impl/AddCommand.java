@@ -71,7 +71,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
             
         } catch (Throwable e) {
 
-            throw new S2JCRCommonException("EJCR0002");
+            throw new S2JCRCommonException("EJCR0001");
 
         } finally {
             

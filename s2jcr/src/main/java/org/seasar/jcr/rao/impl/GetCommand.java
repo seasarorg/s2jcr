@@ -15,6 +15,9 @@
  */
 package org.seasar.jcr.rao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -24,7 +27,6 @@ import javax.jcr.query.QueryResult;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.exception.S2JCRCommonException;
-import org.seasar.jcr.exception.S2JCRNotHappenException;
 import org.seasar.jcr.util.NodeUtil;
 
 public class GetCommand extends AbstractAutoJCRXPathCommand {
@@ -46,15 +48,12 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             throw new S2JCRCommonException("EJCR0002");
         }
 
-        nodePath = nodePath + "/" + dtoDesc.getNodeName();
-        
-        //TODO util refactoring
-        String searchNode = "//" + nodePath;
+        List returnList = new ArrayList();
         Object returnObject = null;
         
         try {
             
-            Query query = getQueryManager().createQuery(searchNode,
+            Query query = getQueryManager().createQuery("//" + nodePath,
                     Query.XPATH);
 
             //TODO getRowsの場合との比較 in jackrabbit
@@ -65,20 +64,19 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
                 throw new S2JCRCommonException("EJCR0002");
             }
             
-            //戻りオブジェクト準備
             returnObject = dtoDesc.getDtoClass().newInstance();
 
-            //1件しかないけど暫定的に。
             while (queryResultNodeIterator.hasNext()) {
 
                 Node node = queryResultNodeIterator.nextNode();                    
                 NodeUtil.copyProperties(node, returnObject);
-                        
+                       
+                returnList.add(returnObject);
             }           
             
-        } catch (Exception e) {
+        } catch (Throwable e) {
             
-            throw new S2JCRNotHappenException("should not happen");
+            throw new S2JCRCommonException("EJCR0001");
             
         } finally {
             
@@ -86,7 +84,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
-        return returnObject;
+        return returnList;
 
     }
 
