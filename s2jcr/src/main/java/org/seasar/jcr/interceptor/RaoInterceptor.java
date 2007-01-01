@@ -41,6 +41,7 @@ public class RaoInterceptor extends AbstractInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
         
         Method method = invocation.getMethod();
+
         if (!MethodUtil.isAbstract(method)) {
             return invocation.proceed();
         }
@@ -48,8 +49,8 @@ public class RaoInterceptor extends AbstractInterceptor {
         try {
             
             Class targetClass = getTargetClass(invocation);
-            RaoMetaData dmd = raoMetaDataFactory.getRaoMetaData(targetClass);
-            JCRCommand cmd = dmd.getJcrCommand(method.getName());
+            RaoMetaData rmd = raoMetaDataFactory.getRaoMetaData(targetClass);
+            JCRCommand cmd = rmd.getJcrCommand(method.getName());
 
             return cmd.execute(invocation.getArguments());
             
