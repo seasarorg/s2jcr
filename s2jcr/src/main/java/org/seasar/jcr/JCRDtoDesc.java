@@ -21,21 +21,10 @@ import org.seasar.framework.beans.BeanDesc;
 
 public interface JCRDtoDesc {
 
-    public String PathName = "path";
-    public String PathSeparater = "/";
-    
-    public abstract String getNodeName();
-
-    public abstract String getPath();
-
-    public abstract String[] getNodes();
-
     public abstract Map getFieldValueMap();
 
     public abstract Class getDtoClass();
 
     public abstract BeanDesc getBeanDesc();
 
-    public abstract boolean isAnnotationField(String field);
-    
 }

@@ -19,6 +19,6 @@ import org.seasar.framework.beans.PropertyDesc;
 
 public interface BeanAnnotationReader {
 
-    String getNodeAnnotation(PropertyDesc pd);
+    String getPropertyAnnotation(PropertyDesc pd);
 
 }
