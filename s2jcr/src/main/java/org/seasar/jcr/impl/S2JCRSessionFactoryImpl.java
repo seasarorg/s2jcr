@@ -103,10 +103,7 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
     }
 
     public Session getSession() throws RepositoryException {
-        
-//        return repository.login(
-//                new SimpleCredentials("username", "password".toCharArray()));
-        
+               
         return repository.login(
                 new SimpleCredentials("defaultuser", "defaultpwd".toCharArray()));
 
