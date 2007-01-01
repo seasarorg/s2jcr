@@ -17,26 +17,38 @@ package org.seasar.jcr.rao.impl;
 
 import java.lang.reflect.Method;
 
-import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 
 public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
 
-    private Class beanClass;
+    private Class raoClass;
     private Method method;
     private ArgsMetaData argsMeta;
 
-    private AnnotationReaderFactory annotationReaderFactory;
-    
-    public AnnotationReaderFactory getAnnotationReaderFactory() {
-        return annotationReaderFactory;
-    }
+    private BeanDesc beanDesc;
 
-    /**
-     * @param sessionFactory
-     */
-    public AbstractJCRNodeCommand(S2JCRSessionFactory sessionFactory) {
+    protected String path;
+    protected String[] targetNodes;
+    
+    protected String targetDtoClassName;
+    
+    protected JcrConverter jcrConverter;
+    
+    public AbstractJCRNodeCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
         super(sessionFactory);
+        this.method = method;
+        this.raoClass = raoClass;
+        this.jcrConverter = jcrConverter;
+        
+        this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
+        this.path = (String) beanDesc.getFieldValue("PATH",raoClass);
+        this.targetDtoClassName = (String) beanDesc.getFieldValue("DTO",raoClass);
+        this.targetNodes = path.split("/");
+
     }
 
     public ArgsMetaData getArgsMeta() {
@@ -47,12 +59,12 @@ public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
         this.argsMeta = argsMeta;
     }
 
-    public Class getBeanClass() {
-        return beanClass;
+    public Class getRaoClass() {
+        return raoClass;
     }
 
-    public void setBeanClass(Class beanClass) {
-        this.beanClass = beanClass;
+    public void setRaoClass(Class raoClass) {
+        this.raoClass = raoClass;
     }
 
     public Method getMethod() {
@@ -63,9 +75,20 @@ public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
         this.method = method;
     }
 
-    public void setAnnotationReaderFactory(
-            AnnotationReaderFactory annotationReaderFactory) {
-        this.annotationReaderFactory = annotationReaderFactory;
+    public String[] getTargetNodes() {
+        return targetNodes;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getTargetDtoClassName() {
+        return targetDtoClassName;
     }
 
 }

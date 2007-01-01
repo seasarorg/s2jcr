@@ -18,7 +18,9 @@ package org.seasar.jcr.rao.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.rao.RaoMetaData;
 import org.seasar.jcr.rao.RaoMetaDataFactory;
 
@@ -28,19 +30,31 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
 
     private Map raoMetaDataCache = new HashMap();
 
+    private JcrConverter jcrConverter;
+    
+//    private AnnotationReaderFactory annotationReaderFactory;
+
     public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory,
+            JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
+        this.sessionFactory = sessionFactory;
+        this.jcrConverter = jcrConverter;
+//        this.annotationReaderFactory = annotationReaderFactory;
+        jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
+    }
+
     public synchronized RaoMetaData getRaoMetaData(Class raoClass) {
         String key = raoClass.getName();
-        RaoMetaData dmd = (RaoMetaData) raoMetaDataCache.get(key);
-        if (dmd != null) {
-            return dmd;
+        RaoMetaData rmd = (RaoMetaData) raoMetaDataCache.get(key);
+        if (rmd != null) {
+            return rmd;
         }
-        dmd = new RaoMetaDataImpl(sessionFactory, raoClass);
-        raoMetaDataCache.put(key, dmd);
-        return dmd;
+        rmd = new RaoMetaDataImpl(sessionFactory, raoClass, jcrConverter);
+        raoMetaDataCache.put(key, rmd);
+        return rmd;
     }
 
 }

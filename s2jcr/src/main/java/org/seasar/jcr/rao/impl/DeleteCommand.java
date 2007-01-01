@@ -15,6 +15,8 @@
  */
 package org.seasar.jcr.rao.impl;
 
+import java.lang.reflect.Method;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -22,14 +24,15 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
-import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
 
 public class DeleteCommand extends AbstractAutoJCRXPathCommand {
 
-    public DeleteCommand(S2JCRSessionFactory sessionFactory) {
-        super(sessionFactory);
+    public DeleteCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
+        super(sessionFactory, method, raoClass, jcrConverter);
     }
 
     /* (non-Javadoc)
@@ -37,35 +40,31 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
      */
     public Object execute(Object[] args) throws RepositoryException {
         
-        JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
-
-        String nodePath = dtoDesc.getPath();
-        if (nodePath == null) {
-            throw new S2JCRCommonException("EJCR0002");
-        }
-
-        Session session = null;
+        Session session = getSession();
         
         try {
             
-            Query query = getQueryManager().createQuery("//" + nodePath,
+            Query query = session.getWorkspace().getQueryManager().createQuery("//" + getPath(),
                     Query.XPATH);
 
             QueryResult queryResult = query.execute();
+
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
             
-            if ( queryResultNodeIterator.getSize() == 0) {
-                throw new S2JCRCommonException("EJCR0002");
-            }
+            int i = 0;
+            Node[] cloneNodes = new Node[(int)queryResultNodeIterator.getSize()];
             
             while (queryResultNodeIterator.hasNext()) {
-
-                Node node = queryResultNodeIterator.nextNode();                    
-                node.remove();                        
-
-            }
-            
+                
+                Node node = queryResultNodeIterator.nextNode();
+                node.checkout();
+                cloneNodes[i] = node;
+                node.remove();
+                i++;
+            }           
+        
             session.save();           
+            checkin(cloneNodes);
             
         } catch (Throwable e) {
             
@@ -79,6 +78,18 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
         
         return null;
 
+
+    }
+
+    /**
+     * 
+     */
+    private void checkin(Node[] nodes) throws Throwable {
+
+        for (int i = 0; i < nodes.length; i++) {
+            Node node = nodes[i];
+            node.checkin();
+        }
     }
 
 }

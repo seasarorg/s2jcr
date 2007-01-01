@@ -15,7 +15,7 @@
  */
 package org.seasar.jcr.rao.impl;
 
-import java.util.Iterator;
+import java.lang.reflect.Method;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -26,13 +26,15 @@ import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
-import org.seasar.jcr.util.ValueConverter;
+import org.seasar.jcr.impl.JCRDtoDescImpl;
 
 public class UpdateCommand extends AbstractAutoJCRXPathCommand {
 
-    public UpdateCommand(S2JCRSessionFactory sessionFactory) {
-        super(sessionFactory);
+    public UpdateCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
+        super(sessionFactory, method, raoClass, jcrConverter);
     }
 
     /* (non-Javadoc)
@@ -42,42 +44,30 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
         
         JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
 
-        String nodePath = dtoDesc.getPath();
-        if (nodePath == null) {
-            throw new S2JCRCommonException("EJCR0002");
-        }
-
-        Session session = null;
+        Session session = getSession();
         
         try {
             
-            Query query = getQueryManager().createQuery("//" + nodePath,
+            Query query = session.getWorkspace().getQueryManager().createQuery("//" + getPath(),
                     Query.XPATH);
 
             QueryResult queryResult = query.execute();
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
             
-            if ( queryResultNodeIterator.getSize() == 0) {
-                throw new S2JCRCommonException("EJCR0002");
-            }
+            int i = 0;
+            Node[] cloneNodes = new Node[(int)queryResultNodeIterator.getSize()];
             
             while (queryResultNodeIterator.hasNext()) {
-
-                Node node = queryResultNodeIterator.nextNode();                    
-
-                //TODO refactoring
-                for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
-                    String propertyName = (String) ite.next();
-                    if (!dtoDesc.isAnnotationField(propertyName)) {
-                            
-                        Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
-                        node.setProperty(propertyName, ValueConverter.convert(propertyValue));                        
-                       
-                    }
-                }
-             }
-            
+                
+                Node node = queryResultNodeIterator.nextNode();
+                node.checkout();
+                jcrConverter.convertDtoToNode(node, dtoDesc);
+                cloneNodes[i] = node;
+                i++;
+            }           
+        
             session.save();           
+            checkin(cloneNodes);
             
         } catch (Throwable e) {
             
@@ -91,6 +81,17 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
         
         return null;
 
+    }
+
+    /**
+     * 
+     */
+    private void checkin(Node[] nodes) throws Throwable {
+
+        for (int i = 0; i < nodes.length; i++) {
+            Node node = nodes[i];
+            node.checkin();
+        }
     }
 
 }

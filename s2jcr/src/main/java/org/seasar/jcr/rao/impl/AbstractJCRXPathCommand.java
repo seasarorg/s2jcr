@@ -15,29 +15,16 @@
  */
 package org.seasar.jcr.rao.impl;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-import javax.jcr.query.QueryManager;
+import java.lang.reflect.Method;
 
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 
 public abstract class AbstractJCRXPathCommand extends AbstractJCRNodeCommand {
 
-    /**
-     * @param sessionFactory
-     */
-    public AbstractJCRXPathCommand(S2JCRSessionFactory sessionFactory) {
-        super(sessionFactory);
+    public AbstractJCRXPathCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
+        super(sessionFactory, method, raoClass, jcrConverter);
     }
 
-    public QueryManager getQueryManager() throws RepositoryException {
-
-        S2JCRSessionFactory f = getSessionFactory();
-        Session s = f.getSession();
-        Workspace w = s.getWorkspace();
-        return w.getQueryManager();
-
-    }
-    
 }

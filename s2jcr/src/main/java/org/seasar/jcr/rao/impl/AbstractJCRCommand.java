@@ -15,6 +15,10 @@
  */
 package org.seasar.jcr.rao.impl;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.rao.JCRCommand;
 
@@ -29,4 +33,18 @@ public abstract class AbstractJCRCommand implements JCRCommand {
     public S2JCRSessionFactory getSessionFactory() {
         return this.sessionFactory;
     }
+
+    public Session getSession() throws RepositoryException {
+        
+        return this.sessionFactory.getSession();
+
+    }
+    
+    public Node getRootNode() throws RepositoryException {
+        
+        return getSession().getRootNode();
+
+    }
+
+
 }

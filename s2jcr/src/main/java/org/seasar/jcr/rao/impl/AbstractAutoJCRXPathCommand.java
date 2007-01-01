@@ -15,29 +15,23 @@
  */
 package org.seasar.jcr.rao.impl;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
-
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 
 public abstract class AbstractAutoJCRXPathCommand extends AbstractJCRXPathCommand {
 
     /**
      * @param sessionFactory
      */
-    public AbstractAutoJCRXPathCommand(S2JCRSessionFactory sessionFactory) {
-        super(sessionFactory);
+    public AbstractAutoJCRXPathCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
+        super(sessionFactory, method, raoClass, jcrConverter);
     }
 
     protected List criteriaCommandList_ = new ArrayList();
-
-    public Object execute(Object[] args) throws RepositoryException {
-        List ret = null;
-
-        return ret;
-        
-    }
 
 }

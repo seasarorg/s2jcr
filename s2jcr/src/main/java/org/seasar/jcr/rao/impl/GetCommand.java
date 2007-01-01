@@ -15,24 +15,30 @@
  */
 package org.seasar.jcr.rao.impl;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
-import org.seasar.jcr.util.NodeUtil;
+import org.seasar.jcr.impl.JCRCommandDescImpl;
 
 public class GetCommand extends AbstractAutoJCRXPathCommand {
 
-    public GetCommand(S2JCRSessionFactory sessionFactory) {
-        super(sessionFactory);
+    private static final String XPATH_PREFIX = "//";
+    private static final ArrayList CHECKLIST = new ArrayList();
+    
+    public GetCommand(S2JCRSessionFactory sessionFactory, Method method,
+            Class raoClass, JcrConverter jcrConverter) {
+        super(sessionFactory, method, raoClass, jcrConverter);
     }
 
     /* (non-Javadoc)
@@ -40,43 +46,33 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      */
     public Object execute(Object[] args) throws RepositoryException {
         
-        JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
-
-        //TODO annotation readerで読めるようにもする(非CoC対応)
-        String nodePath = dtoDesc.getPath();
-        if (nodePath == null) {
-            throw new S2JCRCommonException("EJCR0002");
-        }
+        JCRCommandDesc cmdDesc = new JCRCommandDescImpl(getMethod(), args[0], getTargetDtoClassName());
 
         List returnList = new ArrayList();
-        Object returnObject = null;
+        
+        Session session = getSession();
         
         try {
             
-            Query query = getQueryManager().createQuery("//" + nodePath,
-                    Query.XPATH);
-
-            //TODO getRowsの場合との比較 in jackrabbit
-            QueryResult queryResult = query.execute();
-            NodeIterator queryResultNodeIterator = queryResult.getNodes();
-            
-            if ( queryResultNodeIterator.getSize() == 0) {
-                throw new S2JCRCommonException("EJCR0002");
+            String nodePath = XPATH_PREFIX + getPath();
+            if (cmdDesc.includeDtoParam()) {
+                String xpath = cmdDesc.createXPath();
+                nodePath = nodePath + xpath;
             }
             
-            returnObject = dtoDesc.getDtoClass().newInstance();
+            QueryManager qm = session.getWorkspace().getQueryManager();
+            Query query = qm.createQuery(nodePath, Query.XPATH);
+            QueryResult queryResult = query.execute();
 
-            while (queryResultNodeIterator.hasNext()) {
-
-                Node node = queryResultNodeIterator.nextNode();                    
-                NodeUtil.copyProperties(node, returnObject);
-                       
-                returnList.add(returnObject);
-            }           
+            returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc.getJCRDtoDesc());
+            
+            if (getMethod().getReturnType().isInstance(CHECKLIST)) {
+                return returnList;
+            }
             
         } catch (Throwable e) {
             
-            throw new S2JCRCommonException("EJCR0001");
+            throw new S2JCRCommonException("EJCR0001",e,null);
             
         } finally {
             
@@ -84,7 +80,11 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
-        return returnList;
+        if (returnList.size()>0) {
+            return returnList.get(0);
+        } else {
+            return null;
+        }
 
     }
 

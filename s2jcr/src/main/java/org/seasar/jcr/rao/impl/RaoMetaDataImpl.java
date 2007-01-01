@@ -16,15 +16,14 @@
 package org.seasar.jcr.rao.impl;
 
 //import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
-import org.seasar.framework.beans.factory.BeanDescFactory;
-//import org.seasar.framework.util.FieldUtil;
-//import org.seasar.framework.util.StringUtil;
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.S2JCRSessionFactory;
+import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.rao.JCRCommand;
 import org.seasar.jcr.rao.RaoMetaData;
 
@@ -32,37 +31,36 @@ public class RaoMetaDataImpl implements RaoMetaData {
 
     private static final String[] ADD_NODE = new String[] { "addNode", "add" };
 
-//    private static final String[] ADD_PROPERTY = new String[] { "setProperty" };
-//
-//    private static final String[] UPDATE_NODE = new String[] { "update", "merge" };
-//
-//    private static final String[] DELETE_NODE = new String[] { "delete", "remove" };
+    private static final String[] UPDATE_NODE = new String[] { "updateNode", "update" };
+
+    private static final String[] DELETE_NODE = new String[] { "deleteNode", "removeNode", "delete", "remove" };
 
     private static final String[] GET_NODE = new String[] { "getNode", "get", "find" };
 
-//    private static final String[] GET_PROPERTY = new String[] { "getProperty", "findProperty" };
-
     private Class raoClass;
-
-    private BeanDesc raoBeanDesc;
 
     private Map jcrCommands = new HashMap();
     
     private S2JCRSessionFactory sessionFactory;
 
+    private JcrConverter jcrConverter;
+    
+    private AnnotationReaderFactory annotationReaderFactory;
+    
     /**
      * 
      * @param sessionFactory
      * @param raoClass
      */
-    public RaoMetaDataImpl(S2JCRSessionFactory sessionFactory, Class raoClass) {
+    public RaoMetaDataImpl(S2JCRSessionFactory sessionFactory, Class raoClass, 
+            JcrConverter jcrConverter) {
 
         this.sessionFactory = sessionFactory;
 
         this.raoClass = raoClass;
-        raoBeanDesc = BeanDescFactory.getBeanDesc(raoClass);
-        String[] methods = raoBeanDesc.getMethodNames();
-
+        this.jcrConverter = jcrConverter;
+        
+        Method[] methods = raoClass.getMethods();
         for (int i = 0; i < methods.length; i++) {
             
             setupMethod(methods[i]);
@@ -71,12 +69,18 @@ public class RaoMetaDataImpl implements RaoMetaData {
 
     }
 
-    private void setupMethod(String methodName) {
+    private void setupMethod(Method method) {
 
+        String methodName = method.getName();
+        
         if (isMethod(ADD_NODE, methodName)) {
-            setupAdd(methodName);
+            setupAdd(method);
         } else if (isMethod(GET_NODE, methodName)) {
-            setupGet(methodName);
+            setupGet(method);
+        } else if (isMethod(UPDATE_NODE, methodName)) {
+            setupUpdate(method);
+        } else if (isMethod(DELETE_NODE, methodName)) {
+            setupDelete(method);
         } else {
 
         }
@@ -116,16 +120,28 @@ public class RaoMetaDataImpl implements RaoMetaData {
 //        }
 //    }
 
-    private void setupAdd(String methodName) {
+    private void setupAdd(Method method) {
         
-        AddCommand cmd = new AddCommand(sessionFactory);
-        jcrCommands.put(methodName, cmd);
+        AddCommand cmd = new AddCommand(sessionFactory, method, raoClass, jcrConverter);
+        jcrCommands.put(method.getName(), cmd);
     }
 
-    private void setupGet(String methodName) {
+    private void setupGet(Method method) {
         
-        GetCommand cmd = new GetCommand(sessionFactory);
-        jcrCommands.put(methodName, cmd);
+        GetCommand cmd = new GetCommand(sessionFactory, method, raoClass, jcrConverter);
+        jcrCommands.put(method.getName(), cmd);
+    }
+
+    private void setupUpdate(Method method) {
+        
+        UpdateCommand cmd = new UpdateCommand(sessionFactory, method, raoClass, jcrConverter);
+        jcrCommands.put(method.getName(), cmd);
+    }
+
+    private void setupDelete(Method method) {
+        
+        DeleteCommand cmd = new DeleteCommand(sessionFactory, method, raoClass, jcrConverter);
+        jcrCommands.put(method.getName(), cmd);
     }
 
     /* (non-Javadoc)
@@ -138,6 +154,23 @@ public class RaoMetaDataImpl implements RaoMetaData {
                     null);
         }
         return cmd;
+    }
+
+    public JcrConverter getJcrConverter() {
+        return jcrConverter;
+    }
+
+    public void setConverter(JcrConverter jcrConverter) {
+        this.jcrConverter = jcrConverter;
+    }
+
+    public AnnotationReaderFactory getAnnotationReaderFactory() {
+        return annotationReaderFactory;
+    }
+
+    public void setAnnotationReaderFactory(
+            AnnotationReaderFactory annotationReaderFactory) {
+        this.annotationReaderFactory = annotationReaderFactory;
     }
 
 }
