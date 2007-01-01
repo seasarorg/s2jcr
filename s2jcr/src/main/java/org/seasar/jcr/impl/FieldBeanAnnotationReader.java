@@ -25,7 +25,7 @@ import org.seasar.framework.util.FieldUtil;
 
 public class FieldBeanAnnotationReader implements BeanAnnotationReader {
 
-    public String NODE_SUFFIX = "_NODE";
+    public String PROPERTY_SUFFIX = "_PROPERTY";
 
     private BeanDesc beanDesc;
 
@@ -33,9 +33,9 @@ public class FieldBeanAnnotationReader implements BeanAnnotationReader {
         this.beanDesc = BeanDescFactory.getBeanDesc(beanClass_);
     }
 
-    public String getNodeAnnotation(PropertyDesc pd) {
+    public String getPropertyAnnotation(PropertyDesc pd) {
         String propertyName = pd.getPropertyName();
-        String nodeNameKey = propertyName + NODE_SUFFIX;
+        String nodeNameKey = propertyName + PROPERTY_SUFFIX;
         if (beanDesc.hasField(nodeNameKey)) {
             Field field = beanDesc.getField(nodeNameKey);
             return (String) FieldUtil.get(field, null);
