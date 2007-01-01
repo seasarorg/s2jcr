@@ -36,4 +36,5 @@ public abstract class S2JCRRuntimeException extends SRuntimeException {
             final Object[] args) {
         super(messageCode, args);
     }
+    
 }
