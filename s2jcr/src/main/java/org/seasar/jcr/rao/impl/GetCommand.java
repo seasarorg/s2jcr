@@ -66,9 +66,6 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
 
             returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc.getJCRDtoDesc());
             
-            if (getMethod().getReturnType().isInstance(CHECKLIST)) {
-                return returnList;
-            }
             
         } catch (Throwable e) {
             
@@ -76,7 +73,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             
         } finally {
             
-            getSessionFactory().getSession().logout();
+            session.logout();
             
         }
         
@@ -89,6 +86,19 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      * @return
      */
     protected Object returnValue(List returnList) {
+        
+        if (getMethod().getReturnType().isInstance(CHECKLIST)) {
+            return returnList;
+        }
+        
+        return returnSingleObject(returnList);
+    }
+
+    /**
+     * @param returnList
+     * @return
+     */
+    protected Object returnSingleObject(List returnList) {
         if (returnList.size()>0) {
             return returnList.get(0);
         } else {
