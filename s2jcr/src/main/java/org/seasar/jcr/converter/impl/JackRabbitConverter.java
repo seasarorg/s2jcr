@@ -105,6 +105,16 @@ public class JackRabbitConverter implements JcrConverter {
             ret = ValueFactoryImpl.getInstance().createValue(l.longValue());
         }
 
+        if (object instanceof Boolean) {
+            Boolean b = (Boolean)object;
+            ret = ValueFactoryImpl.getInstance().createValue(b.booleanValue());
+        }
+
+        if (object instanceof Integer) {
+            Integer ival = (Integer)object;
+            ret = ValueFactoryImpl.getInstance().createValue(ival.longValue());
+        }
+
         return ret;
     }
 
@@ -193,8 +203,13 @@ public class JackRabbitConverter implements JcrConverter {
                 ret = src.getProperty(propertyName).getDate();            
             } else if (clazz == Long.class) {
                 ret = new Long(src.getProperty(propertyName).getLong());            
+            } else if (clazz == Integer.class) {
+                Long l = new Long(src.getProperty(propertyName).getLong());            
+                ret = new Integer(l.intValue());            
             } else if (clazz == Double.class) {
                 ret = new Double(src.getProperty(propertyName).getDouble());            
+            } else if (clazz == Boolean.class) {
+                ret = new Boolean(src.getProperty(propertyName).getBoolean());            
             } else {
                 ret = null;
             }
