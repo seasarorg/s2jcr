@@ -80,12 +80,20 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
+        return returnValue(returnList);
+
+    }
+
+    /**
+     * @param returnList
+     * @return
+     */
+    protected Object returnValue(List returnList) {
         if (returnList.size()>0) {
             return returnList.get(0);
         } else {
             return null;
         }
-
     }
 
 }
