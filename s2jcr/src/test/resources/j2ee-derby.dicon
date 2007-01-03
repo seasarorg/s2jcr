@@ -22,7 +22,7 @@
 			"org.apache.derby.jdbc.EmbeddedDriver"
 		</property>
 		<property name="URL">
-			"jdbc:derby:repository/version/db"
+			"jdbc:derby:repository/version/db;create=true"
 		</property>
 		<property name="user"></property>
 		<property name="password"></property>
