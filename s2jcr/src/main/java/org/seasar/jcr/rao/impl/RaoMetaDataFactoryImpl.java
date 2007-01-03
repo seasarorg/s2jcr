@@ -32,8 +32,6 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
 
     private JcrConverter jcrConverter;
     
-//    private AnnotationReaderFactory annotationReaderFactory;
-
     public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -42,7 +40,6 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
             JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
         this.sessionFactory = sessionFactory;
         this.jcrConverter = jcrConverter;
-//        this.annotationReaderFactory = annotationReaderFactory;
         jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
     }
 

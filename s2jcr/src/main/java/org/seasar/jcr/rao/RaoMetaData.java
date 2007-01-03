@@ -19,10 +19,6 @@ import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 
 public interface RaoMetaData {
 
-    public String PROPERTY_KEY_SUFFIX = "_PROPERTY";
-    public String ARGS_KEY_SUFFIX = "_ARGS";
-    public String XPATH_KEY_SUFFIX = "_XPATH";
-
     public JCRCommand getJcrCommand(String methodName)
             throws MethodNotFoundRuntimeException;
 }

@@ -18,13 +18,12 @@ package org.seasar.jcr.impl;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.exception.S2JCRCommonException;
 
 public class JCRCommandDescImpl implements JCRCommandDesc {
-
-    private static final String DTO_SUFFIX = "Dto";
 
     private Method method;
     
@@ -38,7 +37,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
             } else {
                 this.dtoDesc = new JCRDtoDescImpl(param);            
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             throw new S2JCRCommonException("EJCR001",e, new Object[]{"target dto class name"});
         }
     }
@@ -54,7 +53,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         }
         
         String dtoName = method.getParameterTypes()[0].getName();
-        if (dtoName.endsWith(DTO_SUFFIX)) {
+        if (dtoName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
             return true;            
         }
         

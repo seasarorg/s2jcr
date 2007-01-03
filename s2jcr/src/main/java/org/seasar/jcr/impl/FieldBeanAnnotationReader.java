@@ -17,6 +17,7 @@ package org.seasar.jcr.impl;
 
 import java.lang.reflect.Field;
 
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.BeanAnnotationReader;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -24,8 +25,6 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.FieldUtil;
 
 public class FieldBeanAnnotationReader implements BeanAnnotationReader {
-
-    public String PROPERTY_SUFFIX = "_PROPERTY";
 
     private BeanDesc beanDesc;
 
@@ -35,7 +34,7 @@ public class FieldBeanAnnotationReader implements BeanAnnotationReader {
 
     public String getPropertyAnnotation(PropertyDesc pd) {
         String propertyName = pd.getPropertyName();
-        String nodeNameKey = propertyName + PROPERTY_SUFFIX;
+        String nodeNameKey = propertyName + S2JCRConstants.PROPERTY_SUFFIX;
         if (beanDesc.hasField(nodeNameKey)) {
             Field field = beanDesc.getField(nodeNameKey);
             return (String) FieldUtil.get(field, null);
