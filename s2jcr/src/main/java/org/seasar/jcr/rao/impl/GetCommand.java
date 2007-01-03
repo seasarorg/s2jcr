@@ -46,7 +46,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      */
     public Object execute(Object[] args) throws RepositoryException {
         
-        JCRCommandDesc cmdDesc = new JCRCommandDescImpl(getMethod(), args[0], getTargetDtoClassName());
+        JCRCommandDesc cmdDesc = new JCRCommandDescImpl(getMethod(), args[0], getTargetDtoClass());
 
         List returnList = new ArrayList();
         

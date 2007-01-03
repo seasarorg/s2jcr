@@ -29,11 +29,11 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
     
     private JCRDtoDesc dtoDesc;
     
-    public JCRCommandDescImpl(Method method, Object param, String targetNodeDto) {
+    public JCRCommandDescImpl(Method method, Object param, Class targetDtoClass) {
         this.method = method;
         try {
             if (param instanceof String) {
-                this.dtoDesc = new JCRDtoDescImpl(Class.forName(targetNodeDto).newInstance());            
+                this.dtoDesc = new JCRDtoDescImpl(targetDtoClass.newInstance());            
             } else {
                 this.dtoDesc = new JCRDtoDescImpl(param);            
             }

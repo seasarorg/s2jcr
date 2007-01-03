@@ -33,7 +33,7 @@ public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
     protected String path;
     protected String[] targetNodes;
     
-    protected String targetDtoClassName;
+    protected Class targetDtoClass;
     
     protected JcrConverter jcrConverter;
     
@@ -46,7 +46,7 @@ public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
         
         this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
         this.path = (String) beanDesc.getFieldValue("PATH",raoClass);
-        this.targetDtoClassName = (String) beanDesc.getFieldValue("DTO",raoClass);
+        this.targetDtoClass = (Class) beanDesc.getFieldValue("DTO",raoClass);
         this.targetNodes = path.split("/");
 
     }
@@ -87,8 +87,8 @@ public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
         this.path = path;
     }
 
-    public String getTargetDtoClassName() {
-        return targetDtoClassName;
+    public Class getTargetDtoClass() {
+        return targetDtoClass;
     }
 
 }
