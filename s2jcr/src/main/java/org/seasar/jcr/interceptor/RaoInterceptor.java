@@ -56,7 +56,7 @@ public class RaoInterceptor extends AbstractInterceptor {
             
         } catch (Throwable e) {
             
-            throw new S2JCRCommonException("EJCR0001" + e);
+            throw new S2JCRCommonException("EJCR0001", e);
         
         } 
         

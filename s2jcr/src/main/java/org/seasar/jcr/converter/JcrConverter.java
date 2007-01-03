@@ -18,7 +18,6 @@ package org.seasar.jcr.converter;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.query.QueryResult;
 
@@ -32,16 +31,16 @@ import org.seasar.jcr.JCRDtoDesc;
 public interface JcrConverter {
 
     public abstract Node convertPathToNode(Node baseNode, String[] path)
-            throws RepositoryException;
+            throws Throwable;
 
     public abstract void convertDtoToNode(Node targetNode, JCRDtoDesc dtoDesc)
-            throws RepositoryException;
+            throws Throwable;
 
     public abstract Value convertToValue(Object object);
 
-    public abstract List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws RepositoryException;
+    public abstract List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable;
 
-    public abstract void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws RepositoryException;
+    public abstract void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable;
     
     public abstract void setAnnotationReaderFactory(AnnotationReaderFactory annotationReaderFactory);
     

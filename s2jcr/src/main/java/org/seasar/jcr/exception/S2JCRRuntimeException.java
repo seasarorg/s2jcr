@@ -37,4 +37,9 @@ public abstract class S2JCRRuntimeException extends SRuntimeException {
         super(messageCode, args);
     }
     
+    public S2JCRRuntimeException(final String messageCode,
+            final Throwable cause) {
+        super(messageCode, null, cause);
+    }
+
 }

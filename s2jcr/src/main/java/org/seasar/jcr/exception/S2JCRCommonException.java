@@ -40,4 +40,8 @@ public class S2JCRCommonException extends S2JCRRuntimeException {
         super(messageCode, args);
     }
 
+    public S2JCRCommonException(final String messageCode,
+            Throwable cause) {
+        super(messageCode, cause);
+    }
 }

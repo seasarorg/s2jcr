@@ -24,6 +24,7 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
@@ -42,33 +43,29 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
         
         Session session = getSession();
         
+        long nodeCount = 0;
+        
         try {
             
-            Query query = session.getWorkspace().getQueryManager().createQuery("//" + getPath(),
+            Query query = session.getWorkspace().getQueryManager().createQuery(
+                    S2JCRConstants.XPATH_PREFIX + getPath(),
                     Query.XPATH);
 
             QueryResult queryResult = query.execute();
 
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
-            
-            int i = 0;
-            Node[] cloneNodes = new Node[(int)queryResultNodeIterator.getSize()];
-            
+            nodeCount = queryResultNodeIterator.getSize();
             while (queryResultNodeIterator.hasNext()) {
                 
                 Node node = queryResultNodeIterator.nextNode();
-                node.checkout();
-                cloneNodes[i] = node;
                 node.remove();
-                i++;
             }           
         
             session.save();           
-            checkin(cloneNodes);
             
         } catch (Throwable e) {
             
-            throw new S2JCRCommonException("EJCR0001");
+            throw new S2JCRCommonException("EJCR0001", e);
             
         } finally {
             
@@ -76,20 +73,8 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
-        return null;
+        return Long.valueOf(nodeCount);
 
-
-    }
-
-    /**
-     * 
-     */
-    private void checkin(Node[] nodes) throws Throwable {
-
-        for (int i = 0; i < nodes.length; i++) {
-            Node node = nodes[i];
-            node.checkin();
-        }
     }
 
 }

@@ -55,7 +55,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
             session.save();
             
         } catch (Throwable e) {
-            throw new S2JCRCommonException("EJCR0001");
+            throw new S2JCRCommonException("EJCR0001", e);
 
         } finally {
             
@@ -63,7 +63,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
-        return null;
+        return Long.valueOf(1);
     }
 
 }

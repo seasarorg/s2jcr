@@ -25,6 +25,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
@@ -46,14 +47,19 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
 
         Session session = getSession();
         
+        long nodeCount = 0;
+
         try {
             
-            Query query = session.getWorkspace().getQueryManager().createQuery("//" + getPath(),
+            Query query = session.getWorkspace().getQueryManager().createQuery(
+                    S2JCRConstants.XPATH_PREFIX + getPath(),
                     Query.XPATH);
 
             QueryResult queryResult = query.execute();
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
             
+            nodeCount = queryResultNodeIterator.getSize();
+
             int i = 0;
             Node[] cloneNodes = new Node[(int)queryResultNodeIterator.getSize()];
             
@@ -71,7 +77,7 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
             
         } catch (Throwable e) {
             
-            throw new S2JCRCommonException("EJCR0001");
+            throw new S2JCRCommonException("EJCR0001", e);
             
         } finally {
             
@@ -79,7 +85,7 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
             
         }
         
-        return null;
+        return Long.valueOf(nodeCount);
 
     }
 

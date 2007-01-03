@@ -26,6 +26,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.JCRCommandDesc;
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
@@ -33,7 +34,6 @@ import org.seasar.jcr.impl.JCRCommandDescImpl;
 
 public class GetCommand extends AbstractAutoJCRXPathCommand {
 
-    private static final String XPATH_PREFIX = "//";
     private static final ArrayList CHECKLIST = new ArrayList();
     
     public GetCommand(S2JCRSessionFactory sessionFactory, Method method,
@@ -54,7 +54,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
         
         try {
             
-            String nodePath = XPATH_PREFIX + getPath();
+            String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
             if (cmdDesc.includeDtoParam()) {
                 String xpath = cmdDesc.createXPath();
                 nodePath = nodePath + xpath;
@@ -69,7 +69,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             
         } catch (Throwable e) {
             
-            throw new S2JCRCommonException("EJCR0001",e,null);
+            throw new S2JCRCommonException("EJCR0001",e);
             
         } finally {
             

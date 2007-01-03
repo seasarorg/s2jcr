@@ -24,7 +24,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.query.QueryResult;
 
@@ -36,7 +35,6 @@ import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.BeanAnnotationReader;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.converter.JcrConverter;
-import org.seasar.jcr.exception.S2JCRCommonException;
 
 public class JackRabbitConverter implements JcrConverter {
     
@@ -47,7 +45,7 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.util.JcrConverter#convertPathToNode(javax.jcr.Node, java.lang.String[])
      */
-    public Node convertPathToNode(Node baseNode, String[] path) throws RepositoryException {
+    public Node convertPathToNode(Node baseNode, String[] path) throws Throwable {
         
         for (int i = 0; i < path.length; i++) {
             baseNode = baseNode.addNode(path[i]);
@@ -59,7 +57,7 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.util.JcrConverter#convertDtoToNode(javax.jcr.Node, org.seasar.jcr.JCRDtoDesc)
      */
-    public void convertDtoToNode(Node targetNode, JCRDtoDesc dtoDesc) throws RepositoryException {
+    public void convertDtoToNode(Node targetNode, JCRDtoDesc dtoDesc) throws Throwable {
         
         for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
 
@@ -121,7 +119,7 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
      */
-    public List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws RepositoryException {
+    public List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable {
         
         List returnList = new ArrayList();
         
@@ -142,7 +140,7 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
      */
-    public void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws RepositoryException {
+    public void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable {
         
         NodeIterator queryResultNodeIterator = qr.getNodes();
         
@@ -155,44 +153,36 @@ public class JackRabbitConverter implements JcrConverter {
 
     }
 
-    public Object convertNodeToDto(final Node src, final JCRDtoDesc dtoDesc) {
+    public Object convertNodeToDto(final Node src, final JCRDtoDesc dtoDesc) throws Throwable{
 
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoDesc.getDtoClass());
 
         int propertyDescSize = destBeanDesc.getPropertyDescSize();
         Object returnObject = null;
 
-        try {
-
-            returnObject = dtoDesc.getDtoClass().newInstance();
+        returnObject = dtoDesc.getDtoClass().newInstance();
         
-            for (int i = 0; i < propertyDescSize; i++) {
+        for (int i = 0; i < propertyDescSize; i++) {
             
-                PropertyDesc destPropertyDesc = destBeanDesc.getPropertyDesc(i);
+            PropertyDesc destPropertyDesc = destBeanDesc.getPropertyDesc(i);
+               
+            String propertyName = destPropertyDesc.getPropertyName();
+            Class fieldType = destPropertyDesc.getPropertyType();
                 
-                String propertyName = destPropertyDesc.getPropertyName();
-                Class fieldType = destPropertyDesc.getPropertyType();
+            String resolvedPropertyName = 
+                getResolvedPropertyName(propertyName, dtoDesc);
                 
-                String resolvedPropertyName = 
-                    getResolvedPropertyName(propertyName, dtoDesc);
+            Object fieldObject = convert(fieldType, src, resolvedPropertyName);
                 
-                Object fieldObject = convert(fieldType, src, resolvedPropertyName);
-                
-                destPropertyDesc.setValue(returnObject, fieldObject);
-                
-            }
-            
-        } catch (Throwable e) {
-                
-            throw new S2JCRCommonException("EJCR001");
+            destPropertyDesc.setValue(returnObject, fieldObject);
                 
         }
-        
+            
         return returnObject;
         
     }
     
-    private Object convert(Class clazz, Node src, String propertyName) {
+    private Object convert(Class clazz, Node src, String propertyName) throws Throwable {
         Object ret = null;
         try {
             if (clazz == String.class) {
@@ -216,8 +206,8 @@ public class JackRabbitConverter implements JcrConverter {
             
         } catch (PathNotFoundException pnfe) {
             //noop
-        } catch (Exception e) {
-            throw new S2JCRCommonException("EJCR0001",e,null);
+        } catch (Throwable e) {
+            throw e;
         }
         
         return ret;
