@@ -29,6 +29,8 @@ public class S2DerbyPersistenceManager extends S2SimpleDbPersistenceManager {
 
     public S2DerbyPersistenceManager() {
         super();
+        schema = "derby";
+        schemaObjectPrefix = "";
         shutdownOnClose = true;
     }
 
