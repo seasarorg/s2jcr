@@ -19,10 +19,6 @@ import org.seasar.jcr.rao.CommandType;
 
 public interface JCRCommandDesc {
 
-//    public abstract boolean includeDtoParam();
-
-//    public abstract String createXPath(JCRDtoDesc dtoDesc);
-    
     public abstract String getPath();
     
     public abstract Class getTargetDtoClass();

@@ -16,7 +16,6 @@
 package org.seasar.jcr.impl;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -56,53 +55,6 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         this.targetNodes = path.split("/");
 
     }
-
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.JCRCommandDesc#isUsingPathString()
-     */
-//    public boolean includeDtoParam() {
-//        
-//        //TODO 厳密にするときは変更するかも
-//        if (method.getParameterTypes()[0] == String.class) {
-//            return false;
-//        }
-//        
-//        String dtoName = method.getParameterTypes()[0].getName();
-//        if (dtoName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
-//            return true;            
-//        }
-//        
-//        return false;
-//        
-//    }
-
-//    /* (non-Javadoc)
-//     * @see org.seasar.jcr.JCRCommandDesc#createSql()
-//     */
-//    public String createXPath(JCRDtoDesc dtoDesc) {
-//        
-//        if (dtoDesc.getFieldValueMap().keySet().size()==0) return "";
-//            
-//        StringBuffer sb = new StringBuffer();
-//
-//        for (Iterator iter = dtoDesc.getFieldValueMap().keySet().iterator(); iter.hasNext();) {
-//            
-//            if (sb.length()>0) sb.append(" and ");
-//            
-//            String propertyName = (String) iter.next();                    
-//            Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
-//            
-//            sb.append("@");
-//            sb.append(propertyName);
-//            sb.append("='");
-//            sb.append(propertyValue);
-//            sb.append("'");
-//            
-//        }
-//            
-//        return "[" + sb.toString() + "]";
-//        
-//    }
 
     public JCRDtoDesc getDtoDesc() {
         return dtoDesc;
