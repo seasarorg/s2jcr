@@ -16,22 +16,15 @@
 package org.seasar.jcr.rao.impl;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
 
 public abstract class AbstractAutoJCRXPathCommand extends AbstractJCRXPathCommand {
 
-    /**
-     * @param sessionFactory
-     */
     public AbstractAutoJCRXPathCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter) {
-        super(sessionFactory, method, raoClass, jcrConverter);
+            Class raoClass, JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
+        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
     }
-
-    protected List criteriaCommandList_ = new ArrayList();
 
 }

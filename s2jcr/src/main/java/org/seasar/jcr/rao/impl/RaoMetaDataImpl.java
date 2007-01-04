@@ -53,12 +53,13 @@ public class RaoMetaDataImpl implements RaoMetaData {
      * @param raoClass
      */
     public RaoMetaDataImpl(S2JCRSessionFactory sessionFactory, Class raoClass, 
-            JcrConverter jcrConverter) {
+            JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
 
         this.sessionFactory = sessionFactory;
 
         this.raoClass = raoClass;
         this.jcrConverter = jcrConverter;
+        this.annotationReaderFactory = annotationReaderFactory;
         
         Method[] methods = raoClass.getMethods();
         for (int i = 0; i < methods.length; i++) {
@@ -122,25 +123,29 @@ public class RaoMetaDataImpl implements RaoMetaData {
 
     private void setupAdd(Method method) {
         
-        AddCommand cmd = new AddCommand(sessionFactory, method, raoClass, jcrConverter);
+        AddCommand cmd = new AddCommand(sessionFactory, method, raoClass, 
+                jcrConverter, annotationReaderFactory);
         jcrCommands.put(method.getName(), cmd);
     }
 
     private void setupGet(Method method) {
         
-        GetCommand cmd = new GetCommand(sessionFactory, method, raoClass, jcrConverter);
+        GetCommand cmd = new GetCommand(sessionFactory, method, raoClass,
+                jcrConverter, annotationReaderFactory);
         jcrCommands.put(method.getName(), cmd);
     }
 
     private void setupUpdate(Method method) {
         
-        UpdateCommand cmd = new UpdateCommand(sessionFactory, method, raoClass, jcrConverter);
+        UpdateCommand cmd = new UpdateCommand(sessionFactory, method, raoClass,
+                jcrConverter, annotationReaderFactory);
         jcrCommands.put(method.getName(), cmd);
     }
 
     private void setupDelete(Method method) {
         
-        DeleteCommand cmd = new DeleteCommand(sessionFactory, method, raoClass, jcrConverter);
+        DeleteCommand cmd = new DeleteCommand(sessionFactory, method, raoClass,
+                jcrConverter, annotationReaderFactory);
         jcrCommands.put(method.getName(), cmd);
     }
 

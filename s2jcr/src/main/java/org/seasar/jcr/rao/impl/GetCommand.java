@@ -25,20 +25,25 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.JCRCommandDesc;
+import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
 import org.seasar.jcr.exception.S2JCRCommonException;
-import org.seasar.jcr.impl.JCRCommandDescImpl;
+import org.seasar.jcr.impl.JCRDtoDescImpl;
+import org.seasar.jcr.rao.CommandType;
+import org.seasar.jcr.rao.XPathEditStrategy;
 
 public class GetCommand extends AbstractAutoJCRXPathCommand {
 
     private static final ArrayList CHECKLIST = new ArrayList();
     
     public GetCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter) {
-        super(sessionFactory, method, raoClass, jcrConverter);
+            Class raoClass, JcrConverter jcrConverter, 
+            AnnotationReaderFactory annotationReaderFactory) {
+        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
     }
 
     /* (non-Javadoc)
@@ -46,26 +51,31 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      */
     public Object execute(Object[] args) throws RepositoryException {
         
-        JCRCommandDesc cmdDesc = new JCRCommandDescImpl(getMethod(), args[0], getTargetDtoClass());
-
         List returnList = new ArrayList();
         
         Session session = getSession();
         
         try {
             
+            JCRCommandDesc cmdDesc = getCommandDesc();            
+            CommandType cmdType = cmdDesc.getCommandType(cmdDesc.getTargetDtoClass(),args);
+
+            
+            JCRDtoDesc dtoDesc = createJCRDtoDesc(cmdType, args);
+
             String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-            if (cmdDesc.includeDtoParam()) {
-                String xpath = cmdDesc.createXPath();
-                nodePath = nodePath + xpath;
-            }
+            
+            XPathEditStrategy strategy = 
+                XPathEditorFactoryImpl.createXPathEditor(cmdType);
+            
+            String xpath = strategy.createXPath(dtoDesc,args);
+            nodePath = nodePath + xpath;
             
             QueryManager qm = session.getWorkspace().getQueryManager();
             Query query = qm.createQuery(nodePath, Query.XPATH);
             QueryResult queryResult = query.execute();
 
-            returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc.getJCRDtoDesc());
-            
+            returnList = jcrConverter.convertQResultToDto(queryResult, dtoDesc);
             
         } catch (Throwable e) {
             
@@ -82,12 +92,30 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
     }
 
     /**
+     * @param cmdType
+     * @param args
+     * @return
+     */
+    private JCRDtoDesc createJCRDtoDesc(CommandType cmdType, Object[] args) {
+        try {
+            if (cmdType==CommandType.AUTO_DTO) {
+                return new JCRDtoDescImpl(args[0]);
+            } else if (cmdType==CommandType.DEFAULT) {
+                return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass().newInstance());
+            }
+            return null;
+        } catch (Throwable e) {
+            throw new S2JCRCommonException("EJCR0001",e);
+        }
+    }
+
+    /**
      * @param returnList
      * @return
      */
     protected Object returnValue(List returnList) {
         
-        if (getMethod().getReturnType().isInstance(CHECKLIST)) {
+        if (getCommandDesc().getMethodReturnType().isInstance(CHECKLIST)) {
             return returnList;
         }
         

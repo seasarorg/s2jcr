@@ -15,12 +15,22 @@
  */
 package org.seasar.jcr;
 
+import org.seasar.jcr.rao.CommandType;
+
 public interface JCRCommandDesc {
 
-    public abstract boolean includeDtoParam();
+//    public abstract boolean includeDtoParam();
 
-    public abstract String createXPath();
+//    public abstract String createXPath(JCRDtoDesc dtoDesc);
     
-    public abstract JCRDtoDesc getJCRDtoDesc();
+    public abstract String getPath();
+    
+    public abstract Class getTargetDtoClass();
+    
+    public abstract String[] getTargetNodes();
+
+    public abstract Class getMethodReturnType();
+    
+    public abstract CommandType getCommandType(Class dtoClass, Object[] args);
 
 }

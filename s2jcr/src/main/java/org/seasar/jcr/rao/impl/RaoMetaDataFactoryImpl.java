@@ -32,6 +32,8 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
 
     private JcrConverter jcrConverter;
     
+    private AnnotationReaderFactory annotationReaderFactory;
+    
     public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -40,7 +42,7 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
             JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
         this.sessionFactory = sessionFactory;
         this.jcrConverter = jcrConverter;
-        jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
+//        jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
     }
 
     public synchronized RaoMetaData getRaoMetaData(Class raoClass) {
@@ -49,7 +51,7 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
         if (rmd != null) {
             return rmd;
         }
-        rmd = new RaoMetaDataImpl(sessionFactory, raoClass, jcrConverter);
+        rmd = new RaoMetaDataImpl(sessionFactory, raoClass, jcrConverter, annotationReaderFactory);
         raoMetaDataCache.put(key, rmd);
         return rmd;
     }

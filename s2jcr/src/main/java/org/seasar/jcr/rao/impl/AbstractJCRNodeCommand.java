@@ -17,78 +17,47 @@ package org.seasar.jcr.rao.impl;
 
 import java.lang.reflect.Method;
 
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
+import org.seasar.jcr.impl.JCRCommandDescImpl;
 
 public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
 
-    private Class raoClass;
-    private Method method;
-    private ArgsMetaData argsMeta;
-
-    private BeanDesc beanDesc;
-
-    protected String path;
-    protected String[] targetNodes;
-    
-    protected Class targetDtoClass;
     
     protected JcrConverter jcrConverter;
     
+    private AnnotationReaderFactory annotationReaderFactory;
+
+    private JCRCommandDesc commandDesc;
+    
+    
     public AbstractJCRNodeCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter) {
+            Class raoClass, JcrConverter jcrConverter, 
+            AnnotationReaderFactory annotationReaderFactory) {
         super(sessionFactory);
-        this.method = method;
-        this.raoClass = raoClass;
-        this.jcrConverter = jcrConverter;
         
-        this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
-        this.path = (String) beanDesc.getFieldValue("PATH",raoClass);
-        this.targetDtoClass = (Class) beanDesc.getFieldValue("DTO",raoClass);
-        this.targetNodes = path.split("/");
-
-    }
-
-    public ArgsMetaData getArgsMeta() {
-        return argsMeta;
-    }
-
-    public void setArgsMeta(ArgsMetaData argsMeta) {
-        this.argsMeta = argsMeta;
-    }
-
-    public Class getRaoClass() {
-        return raoClass;
-    }
-
-    public void setRaoClass(Class raoClass) {
-        this.raoClass = raoClass;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public void setMethod(Method method) {
-        this.method = method;
+        this.commandDesc = new JCRCommandDescImpl(method, raoClass, annotationReaderFactory);
+        this.jcrConverter = jcrConverter;
+        this.annotationReaderFactory = annotationReaderFactory;
+        
     }
 
     public String[] getTargetNodes() {
-        return targetNodes;
+        return commandDesc.getTargetNodes();
     }
 
     public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+        return commandDesc.getPath();
     }
 
     public Class getTargetDtoClass() {
-        return targetDtoClass;
+        return commandDesc.getTargetDtoClass();
+    }
+
+    public JCRCommandDesc getCommandDesc() {
+        return commandDesc;
     }
 
 }

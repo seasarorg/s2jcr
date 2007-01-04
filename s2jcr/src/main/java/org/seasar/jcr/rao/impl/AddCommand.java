@@ -22,6 +22,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
@@ -31,8 +32,9 @@ import org.seasar.jcr.impl.JCRDtoDescImpl;
 public class AddCommand extends AbstractAutoJCRXPathCommand {
 
     public AddCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter) {
-        super(sessionFactory, method, raoClass, jcrConverter);
+            Class raoClass, JcrConverter jcrConverter, 
+            AnnotationReaderFactory annotationReaderFactory) {
+        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
     }
 
     /* (non-Javadoc)

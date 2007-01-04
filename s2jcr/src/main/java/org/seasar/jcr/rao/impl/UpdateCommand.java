@@ -24,6 +24,7 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
+import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
@@ -34,8 +35,9 @@ import org.seasar.jcr.impl.JCRDtoDescImpl;
 public class UpdateCommand extends AbstractAutoJCRXPathCommand {
 
     public UpdateCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter) {
-        super(sessionFactory, method, raoClass, jcrConverter);
+            Class raoClass, JcrConverter jcrConverter, 
+            AnnotationReaderFactory annotationReaderFactory) {
+        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
     }
 
     /* (non-Javadoc)
