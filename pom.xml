@@ -7,7 +7,7 @@
     <artifactId>s2-jcr-project</artifactId>
     <packaging>pom</packaging>
     <name>S2JCR</name>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
     <description>Utility to use JCR on Seasar2 environment</description>
     <url>http://s2jcr.sandbox.seasar.org/</url>
     <!--
