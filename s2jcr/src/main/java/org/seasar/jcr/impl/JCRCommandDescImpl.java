@@ -18,6 +18,7 @@ package org.seasar.jcr.impl;
 import java.lang.reflect.Method;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.FieldNotFoundRuntimeException;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.S2JCRConstants;
@@ -56,11 +57,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
     }
 
-    public JCRDtoDesc getDtoDesc() {
-        return dtoDesc;
-    }
-
-    public void setDtoDesc(JCRDtoDesc dtoDesc) {
+    public void setJCRDtoDesc(JCRDtoDesc dtoDesc) {
         this.dtoDesc = dtoDesc;
     }
 
@@ -111,13 +108,32 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
      */
     public CommandType getCommandType(Class dtoClass, Object[] args) {
 
+        try {
+            getAnnotationField(method.getName() + 
+                    S2JCRConstants.XPATH_SUFFIX);
+            
+            return CommandType.AUTO_XPATH_ANNOTATION;
+            
+        } catch (FieldNotFoundRuntimeException e) {
+            //noop
+        }
+        
         String dtoName = dtoClass.getName();
-        if (args.length==1 && dtoName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
+        if (args.length==1 && 
+                dtoName.endsWith(S2JCRConstants.DTO_SUFFIX) &&
+                (!(args[0] instanceof String))) {
             return CommandType.AUTO_DTO;            
         }
         
         return CommandType.DEFAULT;
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.seasar.jcr.JCRCommandDesc#getAnnotationField(java.lang.String)
+     */
+    public String getAnnotationField(String fieldName) {
+        return (String) beanDesc.getFieldValue(fieldName,raoClass);
     }
     
 }
