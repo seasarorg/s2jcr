@@ -15,14 +15,12 @@
  */
 package org.seasar.jcr.rao;
 
-import org.seasar.jcr.JCRDtoDesc;
-
 /**
  * @author waki41
  *
  */
 public interface XPathEditStrategy {
 
-    public abstract String createXPath(JCRDtoDesc dtoDesc, Object[] args);
+    public abstract String createXPath(Object targetFieldObject, Object[] args);
 
 }

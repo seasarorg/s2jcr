@@ -15,6 +15,8 @@
  */
 package org.seasar.jcr;
 
+import java.lang.reflect.Method;
+
 import org.seasar.jcr.rao.CommandType;
 
 public interface JCRCommandDesc {
@@ -28,5 +30,12 @@ public interface JCRCommandDesc {
     public abstract Class getMethodReturnType();
     
     public abstract CommandType getCommandType(Class dtoClass, Object[] args);
+
+    public abstract String getAnnotationField(String fieldName);    
+
+    public abstract void setJCRDtoDesc(JCRDtoDesc dtoDesc);    
+    public abstract JCRDtoDesc getJCRDtoDesc();
+
+    public abstract Method getMethod();
 
 }

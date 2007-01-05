@@ -27,4 +27,6 @@ public class S2JCRConstants {
 
     public static final String XPATH_PREFIX = "//";
 
+    public static final String XPATH_SUFFIX = "_XPATH";
+    
 }

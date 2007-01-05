@@ -15,7 +15,6 @@
  */
 package org.seasar.jcr.rao.impl;
 
-import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.rao.XPathEditStrategy;
 
 /**
@@ -27,7 +26,7 @@ public class DefaultStrategy implements XPathEditStrategy {
     /* (non-Javadoc)
      * @see org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc)
      */
-    public String createXPath(JCRDtoDesc dtoDesc, Object[] args) {
+    public String createXPath(Object targetFieldObject, Object[] args) {
         
         return "";
 

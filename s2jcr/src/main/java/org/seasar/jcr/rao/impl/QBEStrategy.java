@@ -17,6 +17,7 @@ package org.seasar.jcr.rao.impl;
 
 import java.util.Iterator;
 
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.rao.XPathEditStrategy;
 
@@ -29,7 +30,10 @@ public class QBEStrategy implements XPathEditStrategy {
     /* (non-Javadoc)
      * @see org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc)
      */
-    public String createXPath(JCRDtoDesc dtoDesc, Object[] args) {
+    public String createXPath(Object targetFieldObject, Object[] args) {
+        
+        JCRCommandDesc cmdDesc = (JCRCommandDesc)targetFieldObject;
+        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
         
         if (dtoDesc.getFieldValueMap().keySet().size()==0) return "";
         
