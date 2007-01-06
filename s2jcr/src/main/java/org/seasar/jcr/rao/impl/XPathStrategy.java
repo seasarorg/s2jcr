@@ -34,7 +34,7 @@ public class XPathStrategy implements XPathEditStrategy {
         JCRCommandDesc cmdDesc = (JCRCommandDesc)targetFieldObject;
         String targetXPath = (String)cmdDesc.getAnnotationField(
                 cmdDesc.getMethod().getName() + S2JCRConstants.XPATH_SUFFIX);
-        
+
         String xpath = replace(targetXPath,"?",args);
         
         return "[" + xpath + "]";
