@@ -8,6 +8,26 @@
     <version>0.2.0-SNAPSHOT</version>
     <name>S2JCR jar file</name>
     <url>http://s2jcr.sandbox.seasar.org/</url>
+    <developers>
+        <developer>
+            <id>shinsuke</id>
+            <name>Shinsuke Sugaya</name>
+            <email>shinsuke_at_yahoo.co.jp</email>
+            <url>http://d.hatena.ne.jp/shinsuke_sugaya/</url>
+            <organization />
+            <organizationUrl />
+            <timezone>+9</timezone>
+        </developer>
+        <developer>
+            <id>waki41</id>
+            <name>Shigeaki Wakizaka</name>
+            <email>waki41_at_gmail.com</email>
+            <url>http://d.hatena.ne.jp/wkzk/</url>
+            <organization />
+            <organizationUrl />
+            <timezone>+9</timezone>
+        </developer>
+    </developers>
     <repositories>
         <repository>
             <id>maven.seasar.org</id>
