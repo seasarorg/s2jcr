@@ -24,6 +24,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.query.QueryResult;
 
@@ -48,8 +49,19 @@ public class JackRabbitConverter implements JcrConverter {
      */
     public Node convertPathToNode(Node baseNode, String[] path) throws Throwable {
         
+        int lastNodeIndex = path.length - 1;
         for (int i = 0; i < path.length; i++) {
-            baseNode = baseNode.addNode(path[i]);
+            if (i==lastNodeIndex) {
+                baseNode = baseNode.addNode(path[i]);                
+            } else {
+                try {
+                    baseNode = baseNode.getNode(path[i]);
+                } catch (PathNotFoundException e) {
+                    baseNode = baseNode.addNode(path[i]);                
+                } catch (RepositoryException e) {
+                    throw e;
+                }                                
+            }
         }
          
         return baseNode;
