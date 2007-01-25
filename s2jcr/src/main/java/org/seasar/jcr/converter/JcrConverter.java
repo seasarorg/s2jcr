@@ -22,7 +22,7 @@ import javax.jcr.Value;
 import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.AnnotationReaderFactory;
-import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.JCRCommandDesc;
 
 /**
  * @author waki41
@@ -33,14 +33,14 @@ public interface JcrConverter {
     public abstract Node convertPathToNode(Node baseNode, String[] path)
             throws Throwable;
 
-    public abstract void convertDtoToNode(Node targetNode, JCRDtoDesc dtoDesc)
+    public abstract void convertDtoToNode(Node targetNode, JCRCommandDesc cmdDesc)
             throws Throwable;
 
     public abstract Value convertToValue(Object object);
 
-    public abstract List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable;
+    public abstract List convertQResultToDto(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable;
 
-    public abstract void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable;
+    public abstract void convertDtoToQResult(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable;
     
     public abstract void setAnnotationReaderFactory(AnnotationReaderFactory annotationReaderFactory);
     

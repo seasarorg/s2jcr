@@ -23,6 +23,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
@@ -46,13 +47,16 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
         
         try {
             
+            JCRCommandDesc cmdDesc = getCommandDesc();            
+
             JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
+            cmdDesc.setJCRDtoDesc(dtoDesc);
 
             Node baseNode = session.getRootNode();
 
             Node currentNode = jcrConverter.convertPathToNode(baseNode, getTargetNodes());
             currentNode.addMixin("mix:versionable");
-            jcrConverter.convertDtoToNode(currentNode,dtoDesc);
+            jcrConverter.convertDtoToNode(currentNode,cmdDesc);
 
             session.save();
             

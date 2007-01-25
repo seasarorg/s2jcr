@@ -25,6 +25,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
@@ -45,7 +46,9 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
      */
     public Object execute(Object[] args) throws RepositoryException {
         
+        JCRCommandDesc cmdDesc = getCommandDesc();            
         JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
+        cmdDesc.setJCRDtoDesc(dtoDesc);
 
         Session session = getSession();
         
@@ -69,7 +72,7 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
                 
                 Node node = queryResultNodeIterator.nextNode();
                 node.checkout();
-                jcrConverter.convertDtoToNode(node, dtoDesc);
+                jcrConverter.convertDtoToNode(node, cmdDesc);
                 cloneNodes[i] = node;
                 i++;
             }           

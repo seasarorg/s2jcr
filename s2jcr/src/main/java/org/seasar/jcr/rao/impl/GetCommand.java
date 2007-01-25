@@ -75,7 +75,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             Query query = qm.createQuery(nodePath, Query.XPATH);
             QueryResult queryResult = query.execute();
 
-            returnList = jcrConverter.convertQResultToDto(queryResult, dtoDesc);
+            returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc);
             
         } catch (Throwable e) {
             

@@ -42,7 +42,17 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
     private String path;
     
     private String[] targetNodes;
+
+    private String id;
     
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public JCRCommandDescImpl(Method method, Class raoClass, 
             AnnotationReaderFactory annotationReaderFactory) {
         
@@ -127,6 +137,10 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         
         return CommandType.DEFAULT;
 
+    }
+
+    public BeanDesc getBeanDesc() {
+        return beanDesc;
     }
 
     /* (non-Javadoc)

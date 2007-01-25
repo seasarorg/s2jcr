@@ -33,6 +33,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.AnnotationReaderFactory;
 import org.seasar.jcr.BeanAnnotationReader;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.converter.JcrConverter;
 
@@ -57,15 +58,16 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.util.JcrConverter#convertDtoToNode(javax.jcr.Node, org.seasar.jcr.JCRDtoDesc)
      */
-    public void convertDtoToNode(Node targetNode, JCRDtoDesc dtoDesc) throws Throwable {
+    public void convertDtoToNode(Node targetNode, JCRCommandDesc cmdDesc) throws Throwable {
         
+        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
         for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
 
             String propertyName = (String) ite.next();                    
             Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
             
             String resolvedPropertyName = 
-                getResolvedPropertyName(propertyName, dtoDesc);
+                getResolvedPropertyName(propertyName, cmdDesc);
 
             if (propertyValue != null) {
                 targetNode.setProperty(resolvedPropertyName, convertToValue(propertyValue));                                        
@@ -119,7 +121,7 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
      */
-    public List convertQResultToDto(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable {
+    public List convertQResultToDto(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable {
         
         List returnList = new ArrayList();
         
@@ -128,7 +130,7 @@ public class JackRabbitConverter implements JcrConverter {
         while (queryResultNodeIterator.hasNext()) {
 
             Node node = queryResultNodeIterator.nextNode();       
-            Object convertObject = convertNodeToDto(node, dtoDesc);
+            Object convertObject = convertNodeToDto(node, cmdDesc);
                    
             returnList.add(convertObject);
             
@@ -140,21 +142,22 @@ public class JackRabbitConverter implements JcrConverter {
     /* (non-Javadoc)
      * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
      */
-    public void convertDtoToQResult(QueryResult qr, JCRDtoDesc dtoDesc) throws Throwable {
+    public void convertDtoToQResult(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable {
         
         NodeIterator queryResultNodeIterator = qr.getNodes();
-        
+
         while (queryResultNodeIterator.hasNext()) {
 
             Node node = queryResultNodeIterator.nextNode();
-            convertDtoToNode(node, dtoDesc);
+            convertDtoToNode(node, cmdDesc);
             
         }           
 
     }
 
-    public Object convertNodeToDto(final Node src, final JCRDtoDesc dtoDesc) throws Throwable{
+    private Object convertNodeToDto(final Node src, final JCRCommandDesc cmdDesc) throws Throwable{
 
+        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoDesc.getDtoClass());
 
         int propertyDescSize = destBeanDesc.getPropertyDescSize();
@@ -170,7 +173,7 @@ public class JackRabbitConverter implements JcrConverter {
             Class fieldType = destPropertyDesc.getPropertyType();
                 
             String resolvedPropertyName = 
-                getResolvedPropertyName(propertyName, dtoDesc);
+                getResolvedPropertyName(propertyName, cmdDesc);
                 
             Object fieldObject = convert(fieldType, src, resolvedPropertyName);
                 
@@ -214,11 +217,10 @@ public class JackRabbitConverter implements JcrConverter {
         
     }
     
-    private String getResolvedPropertyName(String propertyName, JCRDtoDesc dtoDesc) {
+    private String getResolvedPropertyName(String propertyName, JCRCommandDesc cmdDesc) {
         BeanAnnotationReader beanReader = 
-            annotationReaderFactory.createBeanAnnotationReader(dtoDesc.getDtoClass());
-        
-        PropertyDesc pd = dtoDesc.getBeanDesc().getPropertyDesc(propertyName);
+            annotationReaderFactory.createBeanAnnotationReader(cmdDesc.getClass());
+        PropertyDesc pd = cmdDesc.getJCRDtoDesc().getBeanDesc().getPropertyDesc(propertyName);
         
         String newPropertyName = beanReader.getPropertyAnnotation(pd);
         if (newPropertyName != null) {

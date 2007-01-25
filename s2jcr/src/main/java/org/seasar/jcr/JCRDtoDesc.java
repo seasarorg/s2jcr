@@ -21,10 +21,10 @@ import org.seasar.framework.beans.BeanDesc;
 
 public interface JCRDtoDesc {
 
-    public abstract Map getFieldValueMap();
+    Map getFieldValueMap();
 
-    public abstract Class getDtoClass();
+    Class getDtoClass();
 
-    public abstract BeanDesc getBeanDesc();
+    BeanDesc getBeanDesc();
 
 }
