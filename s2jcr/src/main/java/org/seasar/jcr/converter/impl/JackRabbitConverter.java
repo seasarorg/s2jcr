@@ -169,13 +169,14 @@ public class JackRabbitConverter implements JcrConverter {
 
     private Object convertNodeToDto(final Node src, final JCRCommandDesc cmdDesc) throws Throwable{
 
-        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
-        BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoDesc.getDtoClass());
+//        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
+        Class dtoClass = cmdDesc.getTargetDtoClass();
+        BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoClass);
 
         int propertyDescSize = destBeanDesc.getPropertyDescSize();
         Object returnObject = null;
 
-        returnObject = dtoDesc.getDtoClass().newInstance();
+        returnObject = dtoClass.newInstance();
         
         for (int i = 0; i < propertyDescSize; i++) {
             
@@ -232,7 +233,11 @@ public class JackRabbitConverter implements JcrConverter {
     private String getResolvedPropertyName(String propertyName, JCRCommandDesc cmdDesc) {
         BeanAnnotationReader beanReader = 
             annotationReaderFactory.createBeanAnnotationReader(cmdDesc.getClass());
-        PropertyDesc pd = cmdDesc.getJCRDtoDesc().getBeanDesc().getPropertyDesc(propertyName);
+
+        Class dtoClass = cmdDesc.getTargetDtoClass();
+        BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoClass);
+        
+        PropertyDesc pd = destBeanDesc.getPropertyDesc(propertyName);
         
         String newPropertyName = beanReader.getPropertyAnnotation(pd);
         if (newPropertyName != null) {
