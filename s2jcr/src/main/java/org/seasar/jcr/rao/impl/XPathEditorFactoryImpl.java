@@ -33,6 +33,8 @@ public class XPathEditorFactoryImpl implements XPathEditorFactory {
             return new QBEStrategy();
         } else if (cmdType == CommandType.AUTO_XPATH_ANNOTATION) {
             return new XPathStrategy();
+        } else if (cmdType == CommandType.AUTO_ID) {
+            return new IdStrategy();
         } else {
             return null;
         }

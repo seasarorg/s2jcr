@@ -25,6 +25,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
 import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.converter.JcrConverter;
@@ -45,12 +46,18 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
         
         Session session = getSession();
         
+        JCRCommandDesc cmdDesc = getCommandDesc();            
+
+        String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
+        String xpath = new IdStrategy().createXPath(cmdDesc,args);
+        nodePath = nodePath + xpath;
+        
         long nodeCount = 0;
         
         try {
             
             Query query = session.getWorkspace().getQueryManager().createQuery(
-                    S2JCRConstants.XPATH_PREFIX + getPath(),
+                    nodePath,
                     Query.XPATH);
 
             QueryResult queryResult = query.execute();

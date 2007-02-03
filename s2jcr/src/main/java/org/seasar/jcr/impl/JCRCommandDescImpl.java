@@ -29,46 +29,55 @@ import org.seasar.jcr.rao.CommandType;
 public class JCRCommandDescImpl implements JCRCommandDesc {
 
     private BeanDesc beanDesc;
-    
+
     private Class raoClass;
+
     private Class targetDtoClass;
-    
+
     private Method method;
-    
+
     private JCRDtoDesc dtoDesc;
-    
+
     private AnnotationReaderFactory annotationReaderFactory;
-    
+
     private String path;
-    
+
     private String[] targetNodes;
 
-    private String id;
-    
-    public String getId() {
-        return id;
-    }
+    private String idFieldName;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public JCRCommandDescImpl(Method method, Class raoClass, 
+    public JCRCommandDescImpl(Method method, Class raoClass,
             AnnotationReaderFactory annotationReaderFactory) {
-        
+
         this.method = method;
         this.raoClass = raoClass;
         this.annotationReaderFactory = annotationReaderFactory;
-        
+
         this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
-        this.path = (String) beanDesc.getFieldValue("PATH",raoClass);
-        this.targetDtoClass = (Class) beanDesc.getFieldValue("DTO",raoClass);
+        this.path = (String) beanDesc.getFieldValue("PATH", raoClass);
+        this.targetDtoClass = (Class) beanDesc.getFieldValue("DTO", raoClass);
+        try {
+            this.idFieldName = (String) beanDesc.getFieldValue("ID", raoClass);
+        } catch (FieldNotFoundRuntimeException e) {
+            // TODO log出力
+            this.idFieldName = null;
+        }
+
         this.targetNodes = path.split("/");
 
     }
 
     public void setJCRDtoDesc(JCRDtoDesc dtoDesc) {
         this.dtoDesc = dtoDesc;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.seasar.jcr.JCRCommandDesc#getJCRDtoDescl()
+     */
+    public JCRDtoDesc getJCRDtoDesc() {
+        return dtoDesc;
     }
 
     public Method getMethod() {
@@ -79,11 +88,12 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         this.method = method;
     }
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.JCRCommandDesc#getJCRDtoDescl()
-     */
-    public JCRDtoDesc getJCRDtoDesc() {
-        return dtoDesc;
+    public String getIdFieldName() {
+        return idFieldName;
+    }
+
+    public void setIdFieldName(String idFieldName) {
+        this.idFieldName = idFieldName;
     }
 
     public String getPath() {
@@ -106,35 +116,43 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         return targetDtoClass;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.JCRCommandDesc#getMethodReturnType()
      */
     public Class getMethodReturnType() {
         return method.getReturnType();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.JCRCommandDesc#getCommandType()
      */
     public CommandType getCommandType(Class dtoClass, Object[] args) {
 
         try {
-            getAnnotationField(method.getName() + 
-                    S2JCRConstants.XPATH_SUFFIX);
-            
+            getAnnotationField(method.getName() + S2JCRConstants.XPATH_SUFFIX);
+
             return CommandType.AUTO_XPATH_ANNOTATION;
-            
+
         } catch (FieldNotFoundRuntimeException e) {
-            //noop
+            // noop
         }
-        
+
         String dtoName = dtoClass.getName();
-        if (args.length==1 && 
-                dtoName.endsWith(S2JCRConstants.DTO_SUFFIX) &&
-                (!(args[0] instanceof String))) {
-            return CommandType.AUTO_DTO;            
+        if (args.length == 1) {
+
+            String objClassName = args[0].getClass().getName();
+            if (objClassName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
+                return CommandType.AUTO_DTO;
+            } else {
+                return CommandType.AUTO_ID;
+            }
+
         }
-        
+
         return CommandType.DEFAULT;
 
     }
@@ -143,11 +161,16 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         return beanDesc;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.JCRCommandDesc#getAnnotationField(java.lang.String)
      */
     public String getAnnotationField(String fieldName) {
-        return (String) beanDesc.getFieldValue(fieldName,raoClass);
+        return (String) beanDesc.getFieldValue(fieldName, raoClass);
     }
-    
+
+    public boolean hasId() {
+        return (idFieldName != null);
+    }
 }

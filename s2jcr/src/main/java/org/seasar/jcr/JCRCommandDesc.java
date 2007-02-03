@@ -40,5 +40,9 @@ public interface JCRCommandDesc {
     Method getMethod();
 
     BeanDesc getBeanDesc();
+    
+    boolean hasId();
+    
+    String getIdFieldName();
 
 }
