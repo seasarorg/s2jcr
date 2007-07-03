@@ -28,7 +28,7 @@ public class RaoCreator extends ComponentCreatorImpl {
 
     public RaoCreator(NamingConvention namingConvention) {
         super(namingConvention);
-        setNameSuffix("Rao");
+        setNameSuffix("Rao"); 
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
