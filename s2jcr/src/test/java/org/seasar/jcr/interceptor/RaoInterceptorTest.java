@@ -20,13 +20,13 @@ import java.util.List;
 import javax.jcr.Repository;
 
 import org.apache.jackrabbit.core.RepositoryImpl;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.jcr.dto.FileNodeDto;
 import org.seasar.jcr.rao.FileNodeRao;
 import org.seasar.jcr.rao.PageNodeRao;
 import org.seasar.jcr.repository.RepositoryFactory;
 
-public class RaoInterceptorTest extends S2TestCase {
+public class RaoInterceptorTest extends S2FrameworkTestCase {
 
     private FileNodeRao rao;
 

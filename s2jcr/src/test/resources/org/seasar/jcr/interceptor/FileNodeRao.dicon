@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
 "http://www.seasar.org/dtd/components.dtd">
 <components>
+	<include path="j2ee.dicon"/>
 	<include path="s2jcr.dicon"/>
 	<component class="org.seasar.jcr.rao.FileNodeRao">
 		<aspect>s2jcr.interceptor</aspect>

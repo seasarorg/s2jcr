@@ -3,10 +3,8 @@
 	"http://www.seasar.org/dtd/components.dtd">
 <components namespace="s2jcr">
 
-	<include path="j2ee-derby.dicon"/>
-    
     <component name="repositoryFactory"
-        class="org.seasar.jcr.repository.jackrabbit.JackrabbitRepositoryFactory">
+        class="org.seasar.jcr.jackrabbit.repository.JackrabbitRepositoryFactory">
         <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/repository.xml")</arg>
         <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/")</arg>
     </component>
@@ -24,7 +22,7 @@
 	<component class="org.seasar.jcr.rao.impl.RaoMetaDataFactoryImpl" />
 
     <component name="jcrConverter"
-        class="org.seasar.jcr.converter.impl.JackRabbitConverter">
+        class="org.seasar.jcr.jackrabbit.converter.JackRabbitConverter">
     </component>
 
 </components>
