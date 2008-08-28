@@ -22,13 +22,13 @@ import org.seasar.framework.convention.NamingConvention;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class RaoCreator extends ComponentCreatorImpl {
 
     public RaoCreator(NamingConvention namingConvention) {
         super(namingConvention);
-        setNameSuffix("Rao"); 
+        setNameSuffix("Rao");
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 

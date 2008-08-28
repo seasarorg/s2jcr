@@ -21,52 +21,58 @@ import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.S2JCRConstants;
 
 public class JCRDtoDescImpl implements JCRDtoDesc {
 
     private BeanDesc beanDesc;
-    
+
     private Object targetObject;
-    
+
     public JCRDtoDescImpl(Object targetObject) {
         this.targetObject = targetObject;
         this.beanDesc = BeanDescFactory.getBeanDesc(targetObject.getClass());
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.rao.impl.JcrDTODesc#getPropertyList()
      */
     public Map getFieldValueMap() {
-        
+
         Map map = new HashMap();
-        
-        //TODO factoryフィールドをもつ場合
-        for(int i=0;i<beanDesc.getFieldSize();i++) {
+
+        // TODO factoryフィールドをもつ場合
+        for (int i = 0; i < beanDesc.getFieldSize(); i++) {
             Field field = beanDesc.getField(i);
             String fieldName = field.getName();
-            
+
             if (!isAnnotationField(fieldName)) {
                 Object obj = beanDesc.getFieldValue(fieldName, targetObject);
-                if (obj != null ) {
+                if (obj != null) {
                     map.put(fieldName, obj);
-                }                    
+                }
             }
         }
-        
+
         return map;
-    
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.JCRDTODesc#getDtoClass()
      */
     public Class getDtoClass() {
         return targetObject.getClass();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.JCRDTODesc#getBeanDesc()
      */
     public BeanDesc getBeanDesc() {
@@ -77,7 +83,7 @@ public class JCRDtoDescImpl implements JCRDtoDesc {
         if (fieldName.endsWith(S2JCRConstants.PROPERTY_SUFFIX)) {
             return true;
         }
-        
+
         return false;
     }
 }

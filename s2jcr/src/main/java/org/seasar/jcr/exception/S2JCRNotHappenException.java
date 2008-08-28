@@ -17,7 +17,7 @@ package org.seasar.jcr.exception;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class S2JCRNotHappenException extends S2JCRRuntimeException {
 

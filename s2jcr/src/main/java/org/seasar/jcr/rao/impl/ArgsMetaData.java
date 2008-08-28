@@ -26,6 +26,7 @@ public class ArgsMetaData {
     private String[] argNames_;
 
     private boolean dtoFlg_ = false;
+
     private BeanDesc dtoBeanDesc_;
 
     private Argument[] arguments = {};
@@ -33,19 +34,21 @@ public class ArgsMetaData {
     public ArgsMetaData(Method method, String[] argNames, String[] propertyNames) {
         argNames_ = argNames;
 
-        if (((argNames.length == 0) || (argNames.length == 1 && argNames[0].equals("dto")))
+        if (((argNames.length == 0) || (argNames.length == 1 && argNames[0]
+                .equals("dto")))
                 && method.getParameterTypes().length == 1) {
-            dtoBeanDesc_ = BeanDescFactory.getBeanDesc(method.getParameterTypes()[0]);
+            dtoBeanDesc_ = BeanDescFactory.getBeanDesc(method
+                    .getParameterTypes()[0]);
             if (propertyNames == null || propertyNames.length == 0) {
                 argNames_ = getPropertyName(dtoBeanDesc_);
-            }
-            else {
+            } else {
                 argNames_ = propertyNames;
             }
             dtoFlg_ = true;
         }
         for (int i = 0; i < argNames_.length; i++) {
-            arguments = (Argument[]) ArrayUtil.add(arguments, new Argument(argNames_[i]));
+            arguments = (Argument[]) ArrayUtil.add(arguments, new Argument(
+                    argNames_[i]));
         }
 
     }
@@ -72,11 +75,10 @@ public class ArgsMetaData {
 
     public Object getValue(Object[] args, int index) {
         if (dtoFlg_ == true) {
-            return dtoBeanDesc_.getPropertyDesc(arguments[index].getDtoFieldName()).getValue(
-                    args[0]);
+            return dtoBeanDesc_.getPropertyDesc(
+                    arguments[index].getDtoFieldName()).getValue(args[0]);
 
-        }
-        else {
+        } else {
             return args[index];
         }
     }

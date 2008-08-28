@@ -28,27 +28,32 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 /**
  *
  */
-public class S2SimpleDbPersistenceManager extends SimpleDbPersistenceManager 
-    implements JcrDbPersistenceManager {
+public class S2SimpleDbPersistenceManager extends SimpleDbPersistenceManager
+        implements JcrDbPersistenceManager {
 
     protected DataSource dataSource;
-    
+
     public S2SimpleDbPersistenceManager() {
         S2Container container = SingletonS2ContainerFactory.getContainer();
-        dataSource = (DataSource)container.getComponent("dataSource");
+        dataSource = (DataSource) container.getComponent("dataSource");
     }
 
     protected void initConnection() throws Exception {
         con = getConnection();
     }
 
-    protected Connection getConnection() throws ClassNotFoundException, SQLException {
-        
+    protected Connection getConnection() throws ClassNotFoundException,
+            SQLException {
+
         return DataSourceUtil.getConnection(dataSource);
     }
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.persistence.JcrDbPersistenceManager#setDataSource(javax.sql.DataSource)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.seasar.jcr.persistence.JcrDbPersistenceManager#setDataSource(javax
+     * .sql.DataSource)
      */
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;

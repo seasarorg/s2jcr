@@ -37,7 +37,7 @@ public class S2DerbyPersistenceManager extends S2SimpleDbPersistenceManager {
     public boolean getShutdownOnClose() {
         return shutdownOnClose;
     }
-    
+
     public void setShutdownOnClose(boolean shutdownOnClose) {
         this.shutdownOnClose = shutdownOnClose;
     }
@@ -45,7 +45,7 @@ public class S2DerbyPersistenceManager extends S2SimpleDbPersistenceManager {
     protected void closeConnection(Connection connection) throws SQLException {
 
         ConnectionUtil.close(connection);
-        
+
     }
 
 }

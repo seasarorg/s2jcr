@@ -22,50 +22,57 @@ import org.seasar.jcr.rao.XPathEditStrategy;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class XPathStrategy implements XPathEditStrategy {
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc
+     * )
      */
     public String createXPath(Object targetFieldObject, Object[] args) {
-        
-        JCRCommandDesc cmdDesc = (JCRCommandDesc)targetFieldObject;
-        String targetXPath = (String)cmdDesc.getAnnotationField(
-                cmdDesc.getMethod().getName() + S2JCRConstants.XPATH_SUFFIX);
 
-        String xpath = replace(targetXPath,"?",args);
-        
+        JCRCommandDesc cmdDesc = (JCRCommandDesc) targetFieldObject;
+        String targetXPath = (String) cmdDesc.getAnnotationField(cmdDesc
+                .getMethod().getName()
+                + S2JCRConstants.XPATH_SUFFIX);
+
+        String xpath = replace(targetXPath, "?", args);
+
         return "[" + xpath + "]";
     }
 
-    
-    private String replace(final String targetString, String replaceString, Object[] param) {
-        
+    private String replace(final String targetString, String replaceString,
+            Object[] param) {
+
         int cnt = 0;
         int pos = 0;
-        while(targetString.indexOf(replaceString, pos)>0) {
+        while (targetString.indexOf(replaceString, pos) > 0) {
             cnt++;
-            pos = targetString.indexOf(replaceString, pos)+1;
+            pos = targetString.indexOf(replaceString, pos) + 1;
         }
-        
-        if (param.length != cnt) throw new SIllegalArgumentException("EJCR0001",param);
-        
+
+        if (param.length != cnt)
+            throw new SIllegalArgumentException("EJCR0001", param);
+
         pos = 0;
         int i = 0;
-        
-        String newString = targetString;    
+
+        String newString = targetString;
         String newReplaceString = "\\" + replaceString;
-        while (newString.indexOf(replaceString,pos)>0) {
-            
-            pos = newString.indexOf(replaceString, pos)+1;
-            newString = newString.replaceFirst(newReplaceString, "'" + param[i] + "'");
+        while (newString.indexOf(replaceString, pos) > 0) {
+
+            pos = newString.indexOf(replaceString, pos) + 1;
+            newString = newString.replaceFirst(newReplaceString, "'" + param[i]
+                    + "'");
             i++;
         }
-        
+
         return newString;
-        
+
     }
-    
+
 }

@@ -45,7 +45,7 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory {
     private String configuration;
 
     private String home;
-    
+
     public JackrabbitRepositoryFactory(String configuration, String home) {
         this.configuration = configuration;
         this.home = home;
@@ -58,7 +58,7 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory {
         try {
             // return Jackrabbit repository.
             return RepositoryImpl.create(repositoryConfig);
-//            return new TransientRepository()
+            // return new TransientRepository()
         } catch (RepositoryException e) {
             logger.error("Could not create Jackrabbit's repository. ", e);
             throw new RepositoryException(
@@ -67,7 +67,7 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory {
     }
 
     public Repository createRepositoryTran() throws IOException {
-            return new TransientRepository();
+        return new TransientRepository();
     }
 
     protected void resolveConfigurationResource() throws RepositoryException {
@@ -76,16 +76,16 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory {
             return;
 
         if (this.configuration == null) {
-                logger
-                        .debug("no configuration resource specified, using the default one:"
-                                + DEFAULT_CONF_FILE);
+            logger
+                    .debug("no configuration resource specified, using the default one:"
+                            + DEFAULT_CONF_FILE);
             configuration = DEFAULT_CONF_FILE;
         }
 
         if (home == null) {
-                logger
-                        .debug("no repository home dir specified, using the default one:"
-                                + DEFAULT_REP_DIR);
+            logger
+                    .debug("no repository home dir specified, using the default one:"
+                            + DEFAULT_REP_DIR);
             home = DEFAULT_REP_DIR;
         }
 
@@ -93,7 +93,9 @@ public class JackrabbitRepositoryFactory extends RepositoryFactory {
             repositoryConfig = RepositoryConfig.create(configuration, new File(
                     home).getAbsolutePath());
         } catch (ConfigurationException e) {
-            logger.error("Could not create Jackrabbit's repository config. ", e);
+            logger
+                    .error("Could not create Jackrabbit's repository config. ",
+                            e);
             throw new RepositoryException(
                     "Could not create Jackrabbit's repository config. ", e);
         }

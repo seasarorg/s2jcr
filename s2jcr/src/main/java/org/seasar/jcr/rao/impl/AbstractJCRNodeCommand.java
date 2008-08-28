@@ -25,23 +25,22 @@ import org.seasar.jcr.impl.JCRCommandDescImpl;
 
 public abstract class AbstractJCRNodeCommand extends AbstractJCRCommand {
 
-    
     protected JcrConverter jcrConverter;
-    
+
     private AnnotationReaderFactory annotationReaderFactory;
 
     private JCRCommandDesc commandDesc;
-    
-    
-    public AbstractJCRNodeCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter, 
+
+    public AbstractJCRNodeCommand(S2JCRSessionFactory sessionFactory,
+            Method method, Class raoClass, JcrConverter jcrConverter,
             AnnotationReaderFactory annotationReaderFactory) {
         super(sessionFactory);
-        
-        this.commandDesc = new JCRCommandDescImpl(method, raoClass, annotationReaderFactory);
+
+        this.commandDesc = new JCRCommandDescImpl(method, raoClass,
+                annotationReaderFactory);
         this.jcrConverter = jcrConverter;
         this.annotationReaderFactory = annotationReaderFactory;
-        
+
     }
 
     public String[] getTargetNodes() {

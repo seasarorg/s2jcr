@@ -21,9 +21,9 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.FieldNotFoundRuntimeException;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.AnnotationReaderFactory;
-import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.rao.CommandType;
 
 public class JCRCommandDescImpl implements JCRCommandDesc {

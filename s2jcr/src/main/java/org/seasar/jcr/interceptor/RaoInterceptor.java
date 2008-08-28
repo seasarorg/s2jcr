@@ -39,27 +39,27 @@ public class RaoInterceptor extends AbstractInterceptor {
      * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
      */
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        
+
         Method method = invocation.getMethod();
 
         if (!MethodUtil.isAbstract(method)) {
             return invocation.proceed();
         }
-        
+
         try {
-            
+
             Class targetClass = getTargetClass(invocation);
             RaoMetaData rmd = raoMetaDataFactory.getRaoMetaData(targetClass);
             JCRCommand cmd = rmd.getJcrCommand(method.getName());
 
             return cmd.execute(invocation.getArguments());
-            
+
         } catch (Throwable e) {
-            
+
             throw new S2JCRCommonException("EJCR0001", e);
-        
-        } 
-        
+
+        }
+
     }
 
 }

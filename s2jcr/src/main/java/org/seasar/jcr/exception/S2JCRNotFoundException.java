@@ -17,13 +17,13 @@ package org.seasar.jcr.exception;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class S2JCRNotFoundException extends S2JCRRuntimeException {
 
     private static final long serialVersionUID = 4776396995559739545L;
 
     public S2JCRNotFoundException(String node, String path) {
-        super("",new Object[]{node, path});
+        super("", new Object[] { node, path });
     }
 }

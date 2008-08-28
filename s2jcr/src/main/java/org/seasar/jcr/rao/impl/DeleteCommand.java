@@ -34,54 +34,56 @@ import org.seasar.jcr.exception.S2JCRCommonException;
 public class DeleteCommand extends AbstractAutoJCRXPathCommand {
 
     public DeleteCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter, 
+            Class raoClass, JcrConverter jcrConverter,
             AnnotationReaderFactory annotationReaderFactory) {
-        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
+        super(sessionFactory, method, raoClass, jcrConverter,
+                annotationReaderFactory);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.rao.JcrCommand#execute(java.lang.Object[])
      */
     public Object execute(Object[] args) throws RepositoryException {
-        
+
         Session session = getSession();
-        
-        JCRCommandDesc cmdDesc = getCommandDesc();            
+
+        JCRCommandDesc cmdDesc = getCommandDesc();
 
         String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-        String xpath = new IdStrategy().createXPath(cmdDesc,args);
+        String xpath = new IdStrategy().createXPath(cmdDesc, args);
         nodePath = nodePath + xpath;
-        
+
         long nodeCount = 0;
-        
+
         try {
-            
+
             Query query = session.getWorkspace().getQueryManager().createQuery(
-                    nodePath,
-                    Query.XPATH);
+                    nodePath, Query.XPATH);
 
             QueryResult queryResult = query.execute();
 
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
             nodeCount = queryResultNodeIterator.getSize();
             while (queryResultNodeIterator.hasNext()) {
-                
+
                 Node node = queryResultNodeIterator.nextNode();
                 node.remove();
-            }           
-        
-            session.save();           
-            
+            }
+
+            session.save();
+
         } catch (Throwable e) {
-            
+
             throw new S2JCRCommonException("EJCR0001", e);
-            
+
         } finally {
-            
+
             session.logout();
-            
+
         }
-        
+
         return Long.valueOf(nodeCount);
 
     }

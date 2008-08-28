@@ -39,137 +39,164 @@ import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.converter.JcrConverter;
 
 public class JackRabbitConverter implements JcrConverter {
-    
+
     private AnnotationReaderFactory annotationReaderFactory;
-    
-    public JackRabbitConverter() {}
-    
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.util.JcrConverter#convertPathToNode(javax.jcr.Node, java.lang.String[])
+
+    public JackRabbitConverter() {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.seasar.jcr.util.JcrConverter#convertPathToNode(javax.jcr.Node,
+     * java.lang.String[])
      */
-    public Node convertPathToNode(Node baseNode, String[] path) throws Throwable {
-        
+    public Node convertPathToNode(Node baseNode, String[] path)
+            throws Throwable {
+
         int lastNodeIndex = path.length - 1;
         for (int i = 0; i < path.length; i++) {
-            if (i==lastNodeIndex) {
-                baseNode = baseNode.addNode(path[i]);                
+            if (i == lastNodeIndex) {
+                baseNode = baseNode.addNode(path[i]);
             } else {
                 try {
                     baseNode = baseNode.getNode(path[i]);
                 } catch (PathNotFoundException e) {
-                    baseNode = baseNode.addNode(path[i]);                
+                    baseNode = baseNode.addNode(path[i]);
                 } catch (RepositoryException e) {
                     throw e;
-                }                                
+                }
             }
         }
-         
+
         return baseNode;
     }
-    
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.util.JcrConverter#convertDtoToNode(javax.jcr.Node, org.seasar.jcr.JCRDtoDesc)
-     */
-    public void convertDtoToNode(Node targetNode, JCRCommandDesc cmdDesc) throws Throwable {
-        
-        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
-        for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator();ite.hasNext();) {
 
-            String propertyName = (String) ite.next();                    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.seasar.jcr.util.JcrConverter#convertDtoToNode(javax.jcr.Node,
+     * org.seasar.jcr.JCRDtoDesc)
+     */
+    public void convertDtoToNode(Node targetNode, JCRCommandDesc cmdDesc)
+            throws Throwable {
+
+        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
+        for (Iterator ite = dtoDesc.getFieldValueMap().keySet().iterator(); ite
+                .hasNext();) {
+
+            String propertyName = (String) ite.next();
             Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
-            
-            String resolvedPropertyName = 
-                getResolvedPropertyName(propertyName, cmdDesc);
+
+            String resolvedPropertyName = getResolvedPropertyName(propertyName,
+                    cmdDesc);
 
             if (propertyValue != null) {
-                targetNode.setProperty(resolvedPropertyName, convertToValue(propertyValue));                                        
+                targetNode.setProperty(resolvedPropertyName,
+                        convertToValue(propertyValue));
             }
-               
+
         }
-        
+
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.util.JcrConverter#convert(java.lang.Object)
      */
     public Value convertToValue(Object object) {
-        
+
         Value ret = null;
         if (object instanceof String) {
-            ret = ValueFactoryImpl.getInstance().createValue((String)object);
+            ret = ValueFactoryImpl.getInstance().createValue((String) object);
         }
-        
+
         if (object instanceof InputStream) {
-            ret = ValueFactoryImpl.getInstance().createValue((InputStream)object);
+            ret = ValueFactoryImpl.getInstance().createValue(
+                    (InputStream) object);
         }
 
         if (object instanceof Calendar) {
-            ret = ValueFactoryImpl.getInstance().createValue((Calendar)object);
+            ret = ValueFactoryImpl.getInstance().createValue((Calendar) object);
         }
-    
+
         if (object instanceof Double) {
-            Double d = (Double)object;
+            Double d = (Double) object;
             ret = ValueFactoryImpl.getInstance().createValue(d.doubleValue());
         }
 
         if (object instanceof Long) {
-            Long l = (Long)object;
+            Long l = (Long) object;
             ret = ValueFactoryImpl.getInstance().createValue(l.longValue());
         }
 
         if (object instanceof Boolean) {
-            Boolean b = (Boolean)object;
+            Boolean b = (Boolean) object;
             ret = ValueFactoryImpl.getInstance().createValue(b.booleanValue());
         }
 
         if (object instanceof Integer) {
-            Integer ival = (Integer)object;
+            Integer ival = (Integer) object;
             ret = ValueFactoryImpl.getInstance().createValue(ival.longValue());
         }
+
+        // TODO Date -> Calendar
 
         return ret;
     }
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query
+     * .QueryResult, java.lang.Object)
      */
-    public List convertQResultToDto(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable {
-        
+    public List convertQResultToDto(QueryResult qr, JCRCommandDesc cmdDesc)
+            throws Throwable {
+
         List returnList = new ArrayList();
-        
+
         NodeIterator queryResultNodeIterator = qr.getNodes();
-        
+
         while (queryResultNodeIterator.hasNext()) {
 
-            Node node = queryResultNodeIterator.nextNode();       
+            Node node = queryResultNodeIterator.nextNode();
             Object convertObject = convertNodeToDto(node, cmdDesc);
-                   
+
             returnList.add(convertObject);
-            
-        }           
+
+        }
 
         return returnList;
     }
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query.QueryResult, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.seasar.jcr.converter.JcrConverter#convertQResultToDto(javax.jcr.query
+     * .QueryResult, java.lang.Object)
      */
-    public void convertDtoToQResult(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable {
-        
+    public void convertDtoToQResult(QueryResult qr, JCRCommandDesc cmdDesc)
+            throws Throwable {
+
         NodeIterator queryResultNodeIterator = qr.getNodes();
 
         while (queryResultNodeIterator.hasNext()) {
 
             Node node = queryResultNodeIterator.nextNode();
             convertDtoToNode(node, cmdDesc);
-            
-        }           
+
+        }
 
     }
 
-    private Object convertNodeToDto(final Node src, final JCRCommandDesc cmdDesc) throws Throwable{
+    private Object convertNodeToDto(final Node src, final JCRCommandDesc cmdDesc)
+            throws Throwable {
 
-//        JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
+        // JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
         Class dtoClass = cmdDesc.getTargetDtoClass();
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoClass);
 
@@ -177,73 +204,75 @@ public class JackRabbitConverter implements JcrConverter {
         Object returnObject = null;
 
         returnObject = dtoClass.newInstance();
-        
+
         for (int i = 0; i < propertyDescSize; i++) {
-            
+
             PropertyDesc destPropertyDesc = destBeanDesc.getPropertyDesc(i);
-               
+
             String propertyName = destPropertyDesc.getPropertyName();
             Class fieldType = destPropertyDesc.getPropertyType();
-                
-            String resolvedPropertyName = 
-                getResolvedPropertyName(propertyName, cmdDesc);
-                
+
+            String resolvedPropertyName = getResolvedPropertyName(propertyName,
+                    cmdDesc);
+
             Object fieldObject = convert(fieldType, src, resolvedPropertyName);
-                
+
             destPropertyDesc.setValue(returnObject, fieldObject);
-                
+
         }
-            
+
         return returnObject;
-        
+
     }
-    
-    private Object convert(Class clazz, Node src, String propertyName) throws Throwable {
+
+    private Object convert(Class clazz, Node src, String propertyName)
+            throws Throwable {
         Object ret = null;
         try {
             if (clazz == String.class) {
                 ret = src.getProperty(propertyName).getString();
             } else if (clazz == InputStream.class) {
-                ret = src.getProperty(propertyName).getStream();            
+                ret = src.getProperty(propertyName).getStream();
             } else if (clazz == Calendar.class) {
-                ret = src.getProperty(propertyName).getDate();            
+                ret = src.getProperty(propertyName).getDate();
             } else if (clazz == Long.class) {
-                ret = new Long(src.getProperty(propertyName).getLong());            
+                ret = new Long(src.getProperty(propertyName).getLong());
             } else if (clazz == Integer.class) {
-                Long l = new Long(src.getProperty(propertyName).getLong());            
-                ret = new Integer(l.intValue());            
+                Long l = new Long(src.getProperty(propertyName).getLong());
+                ret = new Integer(l.intValue());
             } else if (clazz == Double.class) {
-                ret = new Double(src.getProperty(propertyName).getDouble());            
+                ret = new Double(src.getProperty(propertyName).getDouble());
             } else if (clazz == Boolean.class) {
-                ret = new Boolean(src.getProperty(propertyName).getBoolean());            
+                ret = new Boolean(src.getProperty(propertyName).getBoolean());
             } else {
                 ret = null;
             }
-            
+
         } catch (PathNotFoundException pnfe) {
-            //noop
+            // noop
         } catch (Throwable e) {
             throw e;
         }
-        
+
         return ret;
-        
+
     }
-    
-    private String getResolvedPropertyName(String propertyName, JCRCommandDesc cmdDesc) {
-        BeanAnnotationReader beanReader = 
-            annotationReaderFactory.createBeanAnnotationReader(cmdDesc.getClass());
+
+    private String getResolvedPropertyName(String propertyName,
+            JCRCommandDesc cmdDesc) {
+        BeanAnnotationReader beanReader = annotationReaderFactory
+                .createBeanAnnotationReader(cmdDesc.getClass());
 
         Class dtoClass = cmdDesc.getTargetDtoClass();
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoClass);
-        
+
         PropertyDesc pd = destBeanDesc.getPropertyDesc(propertyName);
-        
+
         String newPropertyName = beanReader.getPropertyAnnotation(pd);
         if (newPropertyName != null) {
             return newPropertyName;
         }
-        
+
         return propertyName;
     }
 
@@ -256,5 +285,4 @@ public class JackRabbitConverter implements JcrConverter {
         this.annotationReaderFactory = annotationReaderFactory;
     }
 
-    
 }

@@ -23,14 +23,14 @@ import org.seasar.jcr.converter.JcrConverter;
 
 /**
  * @author waki41
- *
+ * 
  */
 public abstract class AbstractRao {
 
     private S2JCRSessionFactory sessionFactory;
 
     private JcrConverter jcrConverter;
-    
+
     public JcrConverter getJcrConverter() {
         return jcrConverter;
     }
@@ -46,7 +46,7 @@ public abstract class AbstractRao {
     public void setSessionFactory(S2JCRSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
- 
+
     public Session getSession() throws RepositoryException {
         return this.getSessionFactory().getSession();
     }

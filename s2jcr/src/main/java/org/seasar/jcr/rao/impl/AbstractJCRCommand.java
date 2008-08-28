@@ -34,7 +34,7 @@ public abstract class AbstractJCRCommand implements JCRCommand {
     }
 
     public Session getSession() throws RepositoryException {
-        
+
         return this.sessionFactory.getSession();
 
     }

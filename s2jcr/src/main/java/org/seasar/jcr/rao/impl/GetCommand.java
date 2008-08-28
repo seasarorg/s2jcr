@@ -39,54 +39,58 @@ import org.seasar.jcr.rao.XPathEditStrategy;
 public class GetCommand extends AbstractAutoJCRXPathCommand {
 
     private static final ArrayList CHECKLIST = new ArrayList();
-    
+
     public GetCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter, 
+            Class raoClass, JcrConverter jcrConverter,
             AnnotationReaderFactory annotationReaderFactory) {
-        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
+        super(sessionFactory, method, raoClass, jcrConverter,
+                annotationReaderFactory);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.rao.JcrCommand#execute(java.lang.Object[])
      */
     public Object execute(Object[] args) throws RepositoryException {
-        
+
         List returnList = new ArrayList();
-        
+
         Session session = getSession();
-        
+
         try {
-            
-            JCRCommandDesc cmdDesc = getCommandDesc();            
-            CommandType cmdType = cmdDesc.getCommandType(cmdDesc.getTargetDtoClass(),args);
+
+            JCRCommandDesc cmdDesc = getCommandDesc();
+            CommandType cmdType = cmdDesc.getCommandType(cmdDesc
+                    .getTargetDtoClass(), args);
 
             JCRDtoDesc dtoDesc = createJCRDtoDesc(cmdType, args);
-            cmdDesc.setJCRDtoDesc(dtoDesc);            
+            cmdDesc.setJCRDtoDesc(dtoDesc);
 
             String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-            
-            XPathEditStrategy strategy = 
-                XPathEditorFactoryImpl.createXPathEditor(cmdType);
-            
-            String xpath = strategy.createXPath(cmdDesc,args);
+
+            XPathEditStrategy strategy = XPathEditorFactoryImpl
+                    .createXPathEditor(cmdType);
+
+            String xpath = strategy.createXPath(cmdDesc, args);
             nodePath = nodePath + xpath;
-            
+
             QueryManager qm = session.getWorkspace().getQueryManager();
             Query query = qm.createQuery(nodePath, Query.XPATH);
             QueryResult queryResult = query.execute();
 
             returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc);
-            
+
         } catch (Throwable e) {
-            
-            throw new S2JCRCommonException("EJCR0001",e);
-            
+
+            throw new S2JCRCommonException("EJCR0001", e);
+
         } finally {
-            
+
             session.logout();
-            
+
         }
-        
+
         return returnValue(returnList);
 
     }
@@ -98,16 +102,18 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      */
     private JCRDtoDesc createJCRDtoDesc(CommandType cmdType, Object[] args) {
         try {
-            if (cmdType==CommandType.AUTO_DTO) {
+            if (cmdType == CommandType.AUTO_DTO) {
                 return new JCRDtoDescImpl(args[0]);
-            } else if (cmdType==CommandType.DEFAULT) {
-                return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass().newInstance());
-            } else if (cmdType==CommandType.AUTO_XPATH_ANNOTATION) {
-                return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass().newInstance());
+            } else if (cmdType == CommandType.DEFAULT) {
+                return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass()
+                        .newInstance());
+            } else if (cmdType == CommandType.AUTO_XPATH_ANNOTATION) {
+                return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass()
+                        .newInstance());
             }
             return null;
         } catch (Throwable e) {
-            throw new S2JCRCommonException("EJCR0001",e);
+            throw new S2JCRCommonException("EJCR0001", e);
         }
     }
 
@@ -116,11 +122,11 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      * @return
      */
     protected Object returnValue(List returnList) {
-        
+
         if (getCommandDesc().getMethodReturnType().isInstance(CHECKLIST)) {
             return returnList;
         }
-        
+
         return returnSingleObject(returnList);
     }
 
@@ -129,7 +135,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
      * @return
      */
     protected Object returnSingleObject(List returnList) {
-        if (returnList.size()>0) {
+        if (returnList.size() > 0) {
             return returnList.get(0);
         } else {
             return null;

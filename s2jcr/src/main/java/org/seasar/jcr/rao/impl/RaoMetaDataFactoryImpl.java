@@ -25,24 +25,25 @@ import org.seasar.jcr.rao.RaoMetaData;
 import org.seasar.jcr.rao.RaoMetaDataFactory;
 
 public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
-    
+
     private S2JCRSessionFactory sessionFactory;
 
     private Map raoMetaDataCache = new HashMap();
 
     private JcrConverter jcrConverter;
-    
+
     private AnnotationReaderFactory annotationReaderFactory;
-    
+
     public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     public RaoMetaDataFactoryImpl(S2JCRSessionFactory sessionFactory,
-            JcrConverter jcrConverter, AnnotationReaderFactory annotationReaderFactory) {
+            JcrConverter jcrConverter,
+            AnnotationReaderFactory annotationReaderFactory) {
         this.sessionFactory = sessionFactory;
         this.jcrConverter = jcrConverter;
-//        jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
+        // jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
     }
 
     public synchronized RaoMetaData getRaoMetaData(Class raoClass) {
@@ -51,7 +52,8 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
         if (rmd != null) {
             return rmd;
         }
-        rmd = new RaoMetaDataImpl(sessionFactory, raoClass, jcrConverter, annotationReaderFactory);
+        rmd = new RaoMetaDataImpl(sessionFactory, raoClass, jcrConverter,
+                annotationReaderFactory);
         raoMetaDataCache.put(key, rmd);
         return rmd;
     }

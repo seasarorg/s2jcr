@@ -28,7 +28,9 @@ public class IdStrategy implements XPathEditStrategy {
     /*
      * (non-Javadoc)
      * 
-     * @see org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc)
+     * @see
+     * org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc
+     * )
      */
     public String createXPath(Object targetFieldObject, Object[] args) {
 
@@ -41,12 +43,13 @@ public class IdStrategy implements XPathEditStrategy {
 
         String propertyName = cmdDesc.getIdFieldName();
         Object propertyValue = null;
-        if (cmdDesc.getCommandType(cmdDesc.getTargetDtoClass(),args) == CommandType.AUTO_DTO) {            
-            propertyValue = cmdDesc.getJCRDtoDesc().getFieldValueMap().get(propertyName);            
+        if (cmdDesc.getCommandType(cmdDesc.getTargetDtoClass(), args) == CommandType.AUTO_DTO) {
+            propertyValue = cmdDesc.getJCRDtoDesc().getFieldValueMap().get(
+                    propertyName);
         } else {
             propertyValue = args[0];
         }
-        
+
         sb.append("@");
         sb.append(propertyName);
         sb.append("='");

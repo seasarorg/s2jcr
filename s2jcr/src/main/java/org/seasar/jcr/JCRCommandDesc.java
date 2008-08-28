@@ -23,26 +23,27 @@ import org.seasar.jcr.rao.CommandType;
 public interface JCRCommandDesc {
 
     String getPath();
-    
+
     Class getTargetDtoClass();
-    
+
     String[] getTargetNodes();
 
     Class getMethodReturnType();
-    
+
     CommandType getCommandType(Class dtoClass, Object[] args);
 
-    String getAnnotationField(String fieldName);    
+    String getAnnotationField(String fieldName);
 
-    void setJCRDtoDesc(JCRDtoDesc dtoDesc);    
+    void setJCRDtoDesc(JCRDtoDesc dtoDesc);
+
     JCRDtoDesc getJCRDtoDesc();
 
     Method getMethod();
 
     BeanDesc getBeanDesc();
-    
+
     boolean hasId();
-    
+
     String getIdFieldName();
 
 }

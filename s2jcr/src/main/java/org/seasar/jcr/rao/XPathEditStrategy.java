@@ -17,7 +17,7 @@ package org.seasar.jcr.rao;
 
 /**
  * @author waki41
- *
+ * 
  */
 public interface XPathEditStrategy {
 

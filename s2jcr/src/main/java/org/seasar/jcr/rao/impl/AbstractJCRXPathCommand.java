@@ -23,10 +23,11 @@ import org.seasar.jcr.converter.JcrConverter;
 
 public abstract class AbstractJCRXPathCommand extends AbstractJCRNodeCommand {
 
-    public AbstractJCRXPathCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter,
+    public AbstractJCRXPathCommand(S2JCRSessionFactory sessionFactory,
+            Method method, Class raoClass, JcrConverter jcrConverter,
             AnnotationReaderFactory annotationReaderFactory) {
-        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
+        super(sessionFactory, method, raoClass, jcrConverter,
+                annotationReaderFactory);
     }
 
 }

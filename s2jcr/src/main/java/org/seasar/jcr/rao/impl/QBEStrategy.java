@@ -23,37 +23,44 @@ import org.seasar.jcr.rao.XPathEditStrategy;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class QBEStrategy implements XPathEditStrategy {
 
-    /* (non-Javadoc)
-     * @see org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc
+     * )
      */
     public String createXPath(Object targetFieldObject, Object[] args) {
-        
-        JCRCommandDesc cmdDesc = (JCRCommandDesc)targetFieldObject;
+
+        JCRCommandDesc cmdDesc = (JCRCommandDesc) targetFieldObject;
         JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
-        
-        if (dtoDesc.getFieldValueMap().keySet().size()==0) return "";
-        
+
+        if (dtoDesc.getFieldValueMap().keySet().size() == 0)
+            return "";
+
         StringBuffer sb = new StringBuffer();
 
-        for (Iterator iter = dtoDesc.getFieldValueMap().keySet().iterator(); iter.hasNext();) {
-            
-            if (sb.length()>0) sb.append(" and ");
-            
-            String propertyName = (String) iter.next();                    
+        for (Iterator iter = dtoDesc.getFieldValueMap().keySet().iterator(); iter
+                .hasNext();) {
+
+            if (sb.length() > 0)
+                sb.append(" and ");
+
+            String propertyName = (String) iter.next();
             Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
-            
+
             sb.append("@");
             sb.append(propertyName);
             sb.append("='");
             sb.append(propertyValue);
             sb.append("'");
-            
+
         }
-            
+
         return "[" + sb.toString() + "]";
     }
 

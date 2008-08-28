@@ -21,12 +21,12 @@ import org.seasar.jcr.rao.XPathEditorFactory;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class XPathEditorFactoryImpl implements XPathEditorFactory {
 
     public static XPathEditStrategy createXPathEditor(CommandType cmdType) {
-        
+
         if (cmdType == CommandType.DEFAULT) {
             return new DefaultStrategy();
         } else if (cmdType == CommandType.AUTO_DTO) {
@@ -38,6 +38,6 @@ public class XPathEditorFactoryImpl implements XPathEditorFactory {
         } else {
             return null;
         }
-        
+
     }
 }

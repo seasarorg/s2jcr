@@ -6,4 +6,7 @@
 	<component class="org.seasar.jcr.rao.FileNodeRao">
 		<aspect>s2jcr.interceptor</aspect>
 	</component>
+	<component name="pageNodeRao" class="org.seasar.jcr.rao.impl.PageNodeRaoImpl">
+		<aspect>s2jcr.interceptor</aspect>
+	</component>
 </components>

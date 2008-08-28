@@ -17,12 +17,12 @@ package org.seasar.jcr.impl;
 
 import java.lang.reflect.Field;
 
-import org.seasar.jcr.S2JCRConstants;
-import org.seasar.jcr.BeanAnnotationReader;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.jcr.BeanAnnotationReader;
+import org.seasar.jcr.S2JCRConstants;
 
 public class FieldBeanAnnotationReader implements BeanAnnotationReader {
 

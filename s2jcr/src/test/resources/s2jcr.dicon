@@ -7,6 +7,8 @@
     
     <component name="repositoryFactory"
         class="org.seasar.jcr.repository.jackrabbit.JackrabbitRepositoryFactory">
+        <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/repository.xml")</arg>
+        <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/")</arg>
     </component>
 
     <component name="sessionFactory"

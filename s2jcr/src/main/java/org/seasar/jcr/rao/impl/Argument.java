@@ -20,7 +20,9 @@ import org.seasar.framework.util.StringUtil;
 public class Argument {
 
     private String fieldName;
+
     private String expression;
+
     private String dtoFieldName;
 
     public Argument(String argument) {
@@ -30,15 +32,13 @@ public class Argument {
 
         if (arguments.length == 1) {
             expression = "";
-        }
-        else {
+        } else {
             expression = arguments[1];
         }
 
         if (arguments.length == 3) {
             dtoFieldName = arguments[2];
-        }
-        else {
+        } else {
             dtoFieldName = fieldName;
         }
 

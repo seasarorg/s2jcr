@@ -36,11 +36,12 @@ import org.seasar.jcr.repository.RepositoryFactory;
 import org.seasar.jcr.util.JCRUtil;
 
 public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
-    
+
     /**
      * Logger for this class
      */
-    private static Logger logger = Logger.getLogger(S2JCRSessionFactoryImpl.class);
+    private static Logger logger = Logger
+            .getLogger(S2JCRSessionFactoryImpl.class);
 
     private Repository repository;
 
@@ -60,8 +61,8 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
      * @throws RepositoryException
      */
     public S2JCRSessionFactoryImpl(Repository repository, String workspaceName)
-        throws RepositoryException {
-        
+            throws RepositoryException {
+
         this.repository = repository;
         this.workspaceName = workspaceName;
 
@@ -78,7 +79,8 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
      * @param credentials
      * @throws RepositoryException
      */
-    public S2JCRSessionFactoryImpl(Repository repository) throws RepositoryException {
+    public S2JCRSessionFactoryImpl(Repository repository)
+            throws RepositoryException {
         this(repository, null);
     }
 
@@ -92,8 +94,7 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
     }
 
     public S2JCRSessionFactoryImpl(RepositoryFactory repositoryFactory,
-            String workspaceName)
-            throws RepositoryException {
+            String workspaceName) throws RepositoryException {
         this(repositoryFactory.getRepository(), workspaceName);
     }
 
@@ -103,9 +104,9 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
     }
 
     public Session getSession() throws RepositoryException {
-               
-        return repository.login(
-                new SimpleCredentials("defaultuser", "defaultpwd".toCharArray()));
+
+        return repository.login(new SimpleCredentials("defaultuser",
+                "defaultpwd".toCharArray()));
 
     }
 
@@ -114,8 +115,8 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
             Workspace ws = session.getWorkspace();
             ObservationManager manager = ws.getObservationManager();
             logger.debug("adding listeners "
-                        + Arrays.asList(eventListeners).toString()
-                        + " for session " + session);
+                    + Arrays.asList(eventListeners).toString()
+                    + " for session " + session);
 
             for (int i = 0; i < eventListeners.length; i++) {
                 manager.addEventListener(eventListeners[i].getListener(),
@@ -172,16 +173,15 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
             int position = Arrays.binarySearch(prefixes, prefix);
             if (position >= 0) {
                 logger.debug("prefix " + prefix
-                            + " was already registered; unregistering it");
+                        + " was already registered; unregistering it");
                 // save old namespace
                 overwrittenNamespaces.put(prefix, registry.getURI(prefix));
                 try {
                     // unregister the namespace
                     registry.unregisterNamespace(prefix);
                 } catch (NamespaceException e) {
-                    logger
-                            .warn("Could not unregister the namespace: "
-                                    + prefix, e);
+                    logger.warn(
+                            "Could not unregister the namespace: " + prefix, e);
                 }
             }
         }
@@ -216,7 +216,7 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
         }
 
         logger.debug("reverting back overwritten namespaces "
-                    + overwrittenNamespaces);
+                + overwrittenNamespaces);
         if (overwrittenNamespaces != null) {
             for (Iterator iter = overwrittenNamespaces.entrySet().iterator(); iter
                     .hasNext();) {
@@ -311,7 +311,8 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
     /*
      * (non-Javadoc)
      * 
-     * @see com.marevol.utils.jcr.impl.SessionFactory#setNamespaces(java.util.Map)
+     * @see
+     * com.marevol.utils.jcr.impl.SessionFactory#setNamespaces(java.util.Map)
      */
     public void setNamespaces(Map namespaces) {
         this.namespaces = namespaces;

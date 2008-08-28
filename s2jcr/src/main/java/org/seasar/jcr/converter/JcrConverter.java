@@ -26,22 +26,25 @@ import org.seasar.jcr.JCRCommandDesc;
 
 /**
  * @author waki41
- *
+ * 
  */
 public interface JcrConverter {
 
     public abstract Node convertPathToNode(Node baseNode, String[] path)
             throws Throwable;
 
-    public abstract void convertDtoToNode(Node targetNode, JCRCommandDesc cmdDesc)
-            throws Throwable;
+    public abstract void convertDtoToNode(Node targetNode,
+            JCRCommandDesc cmdDesc) throws Throwable;
 
     public abstract Value convertToValue(Object object);
 
-    public abstract List convertQResultToDto(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable;
+    public abstract List convertQResultToDto(QueryResult qr,
+            JCRCommandDesc cmdDesc) throws Throwable;
 
-    public abstract void convertDtoToQResult(QueryResult qr, JCRCommandDesc cmdDesc) throws Throwable;
-    
-    public abstract void setAnnotationReaderFactory(AnnotationReaderFactory annotationReaderFactory);
-    
+    public abstract void convertDtoToQResult(QueryResult qr,
+            JCRCommandDesc cmdDesc) throws Throwable;
+
+    public abstract void setAnnotationReaderFactory(
+            AnnotationReaderFactory annotationReaderFactory);
+
 }

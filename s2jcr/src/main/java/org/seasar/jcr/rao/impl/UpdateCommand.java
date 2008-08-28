@@ -36,64 +36,67 @@ import org.seasar.jcr.impl.JCRDtoDescImpl;
 public class UpdateCommand extends AbstractAutoJCRXPathCommand {
 
     public UpdateCommand(S2JCRSessionFactory sessionFactory, Method method,
-            Class raoClass, JcrConverter jcrConverter, 
+            Class raoClass, JcrConverter jcrConverter,
             AnnotationReaderFactory annotationReaderFactory) {
-        super(sessionFactory, method, raoClass, jcrConverter, annotationReaderFactory);
+        super(sessionFactory, method, raoClass, jcrConverter,
+                annotationReaderFactory);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.seasar.jcr.rao.JcrCommand#execute(java.lang.Object[])
      */
     public Object execute(Object[] args) throws RepositoryException {
-        
-        JCRCommandDesc cmdDesc = getCommandDesc();            
+
+        JCRCommandDesc cmdDesc = getCommandDesc();
         JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
         cmdDesc.setJCRDtoDesc(dtoDesc);
 
         String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-        String xpath = new IdStrategy().createXPath(cmdDesc,args);
+        String xpath = new IdStrategy().createXPath(cmdDesc, args);
         nodePath = nodePath + xpath;
-        
+
         Session session = getSession();
-        
+
         long nodeCount = 0;
 
         try {
-            
+
             Query query = session.getWorkspace().getQueryManager().createQuery(
-                    nodePath,
-                    Query.XPATH);
+                    nodePath, Query.XPATH);
 
             QueryResult queryResult = query.execute();
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
-            
+
             nodeCount = queryResultNodeIterator.getSize();
 
             int i = 0;
-            Node[] cloneNodes = new Node[(int)queryResultNodeIterator.getSize()];
-            
+            Node[] cloneNodes = new Node[(int) queryResultNodeIterator
+                    .getSize()];
+
             while (queryResultNodeIterator.hasNext()) {
-                
+
                 Node node = queryResultNodeIterator.nextNode();
                 node.checkout();
                 jcrConverter.convertDtoToNode(node, cmdDesc);
                 cloneNodes[i] = node;
                 i++;
-            }           
-        
-            session.save();           
+            }
+
+            session.save();
             checkin(cloneNodes);
-            
+
         } catch (Throwable e) {
-            
+
             throw new S2JCRCommonException("EJCR0001", e);
-            
+
         } finally {
-            
+
             session.logout();
-            
+
         }
-        
+
         return Long.valueOf(nodeCount);
 
     }

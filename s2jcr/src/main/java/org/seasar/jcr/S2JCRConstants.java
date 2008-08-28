@@ -17,7 +17,7 @@ package org.seasar.jcr;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class S2JCRConstants {
 
@@ -28,5 +28,5 @@ public class S2JCRConstants {
     public static final String XPATH_PREFIX = "//";
 
     public static final String XPATH_SUFFIX = "_XPATH";
-    
+
 }

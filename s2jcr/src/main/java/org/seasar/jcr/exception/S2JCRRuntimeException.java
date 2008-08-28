@@ -19,7 +19,7 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author waki41
- *
+ * 
  */
 public abstract class S2JCRRuntimeException extends SRuntimeException {
 
@@ -32,13 +32,11 @@ public abstract class S2JCRRuntimeException extends SRuntimeException {
         super(messageCode, args, cause);
     }
 
-    public S2JCRRuntimeException(final String messageCode,
-            final Object[] args) {
+    public S2JCRRuntimeException(final String messageCode, final Object[] args) {
         super(messageCode, args);
     }
-    
-    public S2JCRRuntimeException(final String messageCode,
-            final Throwable cause) {
+
+    public S2JCRRuntimeException(final String messageCode, final Throwable cause) {
         super(messageCode, null, cause);
     }
 

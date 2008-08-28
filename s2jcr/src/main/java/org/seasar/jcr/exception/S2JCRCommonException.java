@@ -17,7 +17,7 @@ package org.seasar.jcr.exception;
 
 /**
  * @author waki41
- *
+ * 
  */
 public class S2JCRCommonException extends S2JCRRuntimeException {
 
@@ -35,13 +35,11 @@ public class S2JCRCommonException extends S2JCRRuntimeException {
         super(messageCode, cause, args);
     }
 
-    public S2JCRCommonException(final String messageCode,
-            final Object[] args) {
+    public S2JCRCommonException(final String messageCode, final Object[] args) {
         super(messageCode, args);
     }
 
-    public S2JCRCommonException(final String messageCode,
-            Throwable cause) {
+    public S2JCRCommonException(final String messageCode, Throwable cause) {
         super(messageCode, cause);
     }
 }

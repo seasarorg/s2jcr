@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 /**
  * @author waki41
- *
+ * 
  */
 public interface JcrDbPersistenceManager {
 
