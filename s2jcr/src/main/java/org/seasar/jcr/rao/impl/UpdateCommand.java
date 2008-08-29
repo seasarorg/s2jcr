@@ -53,15 +53,16 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
         JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
         cmdDesc.setJCRDtoDesc(dtoDesc);
 
-        String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-        String xpath = new IdStrategy().createXPath(cmdDesc, args);
-        nodePath = nodePath + xpath;
-
         Session session = getSession();
 
         long nodeCount = 0;
 
         try {
+            String path = getPath();
+            if (path.startsWith("/")) {
+                path = path.replaceFirst("^/+", "");
+            }
+            String nodePath = S2JCRConstants.XPATH_PREFIX + path;
 
             Query query = session.getWorkspace().getQueryManager().createQuery(
                     nodePath, Query.XPATH);

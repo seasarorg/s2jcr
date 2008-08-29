@@ -21,4 +21,5 @@ public interface BeanAnnotationReader {
 
     String getPropertyAnnotation(PropertyDesc pd);
 
+    String getPathPropertyAnnotation();
 }

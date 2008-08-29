@@ -22,7 +22,7 @@
 	<component class="org.seasar.jcr.rao.impl.RaoMetaDataFactoryImpl" />
 
     <component name="jcrConverter"
-        class="org.seasar.jcr.jackrabbit.converter.JackRabbitConverter">
+        class="org.seasar.jcr.jackrabbit.converter.JackrabbitConverter">
     </component>
 
 </components>

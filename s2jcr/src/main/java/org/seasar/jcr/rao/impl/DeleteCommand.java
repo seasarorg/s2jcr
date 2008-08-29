@@ -52,8 +52,6 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
         JCRCommandDesc cmdDesc = getCommandDesc();
 
         String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-        String xpath = new IdStrategy().createXPath(cmdDesc, args);
-        nodePath = nodePath + xpath;
 
         long nodeCount = 0;
 

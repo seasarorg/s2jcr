@@ -25,13 +25,11 @@ public class CommandType {
 
     public static final CommandType DEFAULT = new CommandType(0);
 
-    public static final CommandType AUTO_XPATH_ANNOTATION = new CommandType(1);
+    public static final CommandType MANUAL = new CommandType(1);
 
-    public static final CommandType AUTO_DTO = new CommandType(2);
+    public static final CommandType AUTO_XPATH_ANNOTATION = new CommandType(2);
 
-    public static final CommandType AUTO_ID = new CommandType(3);
-
-    public static final CommandType MANUAL = new CommandType(4);
+    public static final CommandType AUTO_DTO = new CommandType(3);
 
     private CommandType(int patternNo) {
         this.patternNo = patternNo;

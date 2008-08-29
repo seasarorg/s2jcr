@@ -21,15 +21,9 @@ import org.seasar.jcr.dto.FileNodeDto;
 
 public interface FileNodeRao {
 
-    public Class DTO = FileNodeDto.class;
-
-    public String ID = "title";
-
-    public String PATH = "経理2/帳簿2/ファイル";
+    public Class BEAN = FileNodeDto.class;
 
     public String getWithPrice_XPATH = "@price > ? and @price < ?";
-
-    public String description_PROPERTY = "desc";
 
     public void add(FileNodeDto dto);
 

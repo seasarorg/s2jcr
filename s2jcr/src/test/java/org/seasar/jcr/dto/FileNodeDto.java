@@ -18,6 +18,9 @@ package org.seasar.jcr.dto;
 import java.io.InputStream;
 
 public class FileNodeDto {
+    public static final String description_PROPERTY = "desc";
+
+    private String path;
 
     private String title;
 
@@ -28,6 +31,14 @@ public class FileNodeDto {
     private Long han;
 
     private InputStream inputStream;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public Long getHan() {
         return han;

@@ -58,7 +58,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
 
             Node currentNode = jcrConverter.convertPathToNode(baseNode,
                     getTargetNodes());
-            currentNode.addMixin("mix:versionable");
+            currentNode.addMixin("mix:versionable"); // TODO cmdDesc
             jcrConverter.convertDtoToNode(currentNode, cmdDesc);
 
             session.save();

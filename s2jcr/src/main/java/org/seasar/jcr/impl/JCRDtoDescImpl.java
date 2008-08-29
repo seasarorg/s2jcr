@@ -22,7 +22,6 @@ import java.util.Map;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.JCRDtoDesc;
-import org.seasar.jcr.S2JCRConstants;
 
 public class JCRDtoDescImpl implements JCRDtoDesc {
 
@@ -80,7 +79,7 @@ public class JCRDtoDescImpl implements JCRDtoDesc {
     }
 
     private boolean isAnnotationField(String fieldName) {
-        if (fieldName.endsWith(S2JCRConstants.PROPERTY_SUFFIX)) {
+        if (fieldName.endsWith(FieldBeanAnnotationReader.PROPERTY_SUFFIX)) {
             return true;
         }
 

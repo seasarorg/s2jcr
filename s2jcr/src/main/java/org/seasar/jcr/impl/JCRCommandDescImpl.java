@@ -21,6 +21,7 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.FieldNotFoundRuntimeException;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jcr.AnnotationReaderFactory;
+import org.seasar.jcr.BeanAnnotationReader;
 import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRConstants;
@@ -40,11 +41,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
     private AnnotationReaderFactory annotationReaderFactory;
 
-    private String path;
-
-    private String[] targetNodes;
-
-    private String idFieldName;
+    private String pathProperty;
 
     public JCRCommandDescImpl(Method method, Class raoClass,
             AnnotationReaderFactory annotationReaderFactory) {
@@ -54,16 +51,11 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         this.annotationReaderFactory = annotationReaderFactory;
 
         this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
-        this.path = (String) beanDesc.getFieldValue("PATH", raoClass);
-        this.targetDtoClass = (Class) beanDesc.getFieldValue("DTO", raoClass);
-        try {
-            this.idFieldName = (String) beanDesc.getFieldValue("ID", raoClass);
-        } catch (FieldNotFoundRuntimeException e) {
-            // TODO log出力
-            this.idFieldName = null;
-        }
+        this.targetDtoClass = (Class) beanDesc.getFieldValue("BEAN", raoClass);
 
-        this.targetNodes = path.split("/");
+        BeanAnnotationReader annotationReader = annotationReaderFactory
+                .createBeanAnnotationReader(targetDtoClass);
+        this.pathProperty = annotationReader.getPathPropertyAnnotation();
 
     }
 
@@ -88,28 +80,34 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         this.method = method;
     }
 
-    public String getIdFieldName() {
-        return idFieldName;
+    public String getPathProperty() {
+        return pathProperty;
     }
 
-    public void setIdFieldName(String idFieldName) {
-        this.idFieldName = idFieldName;
+    public void setPathProperty(String pathProperty) {
+        this.pathProperty = pathProperty;
     }
 
     public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+        if (dtoDesc != null) {
+            String path = (String) dtoDesc.getFieldValueMap().get(pathProperty);
+            if (path == null) {
+                return "*"; // TODO null?
+            }
+            return path;
+        }
+        return null;
     }
 
     public String[] getTargetNodes() {
-        return targetNodes;
-    }
-
-    public void setTargetNodes(String[] targetNodes) {
-        this.targetNodes = targetNodes;
+        if (dtoDesc != null) {
+            String path = (String) dtoDesc.getFieldValueMap().get(pathProperty);
+            if (path == null) {
+                return null; // TODO exception?
+            }
+            return path.split("/");
+        }
+        return null;
     }
 
     public Class getTargetDtoClass() {
@@ -146,9 +144,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
             String objClassName = args[0].getClass().getName();
             if (objClassName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
-                return CommandType.AUTO_DTO;
-            } else {
-                return CommandType.AUTO_ID;
+                return CommandType.AUTO_DTO; // TODO XPATH
             }
 
         }
@@ -170,7 +166,4 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         return (String) beanDesc.getFieldValue(fieldName, raoClass);
     }
 
-    public boolean hasId() {
-        return (idFieldName != null);
-    }
 }

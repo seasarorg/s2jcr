@@ -103,7 +103,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
     private JCRDtoDesc createJCRDtoDesc(CommandType cmdType, Object[] args) {
         try {
             if (cmdType == CommandType.AUTO_DTO) {
-                return new JCRDtoDescImpl(args[0]);
+                return new JCRDtoDescImpl(args[0]); // TODO XPATH
             } else if (cmdType == CommandType.DEFAULT) {
                 return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass()
                         .newInstance());

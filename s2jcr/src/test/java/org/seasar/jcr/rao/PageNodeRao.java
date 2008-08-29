@@ -21,9 +21,7 @@ import org.seasar.jcr.dto.FileNodeDto;
 
 public interface PageNodeRao {
 
-    public Class DTO = FileNodeDto.class;
-
-    public String PATH = "com2/seasar/jcr/FileNode";
+    public Class BEAN = FileNodeDto.class;
 
     public String getWithPrice_XPATH = "@price > ? and @price < ?";
 

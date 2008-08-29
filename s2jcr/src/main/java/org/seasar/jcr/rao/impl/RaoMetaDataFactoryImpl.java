@@ -43,7 +43,7 @@ public class RaoMetaDataFactoryImpl implements RaoMetaDataFactory {
             AnnotationReaderFactory annotationReaderFactory) {
         this.sessionFactory = sessionFactory;
         this.jcrConverter = jcrConverter;
-        // jcrConverter.setAnnotationReaderFactory(annotationReaderFactory);
+        this.annotationReaderFactory = annotationReaderFactory;
     }
 
     public synchronized RaoMetaData getRaoMetaData(Class raoClass) {

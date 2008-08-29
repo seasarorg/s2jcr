@@ -21,12 +21,16 @@ package org.seasar.jcr;
  */
 public class S2JCRConstants {
 
-    public static final String PROPERTY_SUFFIX = "_PROPERTY";
-
     public static final String DTO_SUFFIX = "Dto";
 
     public static final String XPATH_PREFIX = "//";
 
     public static final String XPATH_SUFFIX = "_XPATH";
+
+    public static final String S2JCR_CLASS = "s2jcr:class";
+
+    public static final String S2JCR_NAMESPACE_URI = "http://s2jcr.sandbox.seasar.org/1.0";
+
+    public static final String S2JCR_NAMESPACE_PREFIX = "s2jcr";
 
 }

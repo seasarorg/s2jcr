@@ -22,9 +22,12 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.jcr.BeanAnnotationReader;
-import org.seasar.jcr.S2JCRConstants;
 
 public class FieldBeanAnnotationReader implements BeanAnnotationReader {
+
+    public static final String PATH_SUFFIX = "_PATH";
+
+    public static final String PROPERTY_SUFFIX = "_PROPERTY";
 
     private BeanDesc beanDesc;
 
@@ -34,12 +37,23 @@ public class FieldBeanAnnotationReader implements BeanAnnotationReader {
 
     public String getPropertyAnnotation(PropertyDesc pd) {
         String propertyName = pd.getPropertyName();
-        String nodeNameKey = propertyName + S2JCRConstants.PROPERTY_SUFFIX;
+        String nodeNameKey = propertyName + PROPERTY_SUFFIX;
         if (beanDesc.hasField(nodeNameKey)) {
             Field field = beanDesc.getField(nodeNameKey);
             return (String) FieldUtil.get(field, null);
         }
         return null;
+    }
+
+    public String getPathPropertyAnnotation() {
+        int size = beanDesc.getFieldSize();
+        for (int i = 0; i < size; i++) {
+            String name = beanDesc.getField(i).getName();
+            if (name.endsWith(PATH_SUFFIX)) {
+                return name;
+            }
+        }
+        return "path"; // default
     }
 
 }

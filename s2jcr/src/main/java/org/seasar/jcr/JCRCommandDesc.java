@@ -22,9 +22,9 @@ import org.seasar.jcr.rao.CommandType;
 
 public interface JCRCommandDesc {
 
-    String getPath();
-
     Class getTargetDtoClass();
+
+    String getPath();
 
     String[] getTargetNodes();
 
@@ -42,8 +42,5 @@ public interface JCRCommandDesc {
 
     BeanDesc getBeanDesc();
 
-    boolean hasId();
-
-    String getIdFieldName();
-
+    String getPathProperty();
 }

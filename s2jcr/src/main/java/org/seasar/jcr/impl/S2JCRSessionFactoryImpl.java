@@ -30,6 +30,7 @@ import javax.jcr.Workspace;
 import javax.jcr.observation.ObservationManager;
 
 import org.seasar.framework.log.Logger;
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.S2JCRSessionFactory;
 import org.seasar.jcr.event.EventListenerDefinition;
 import org.seasar.jcr.repository.RepositoryFactory;
@@ -68,6 +69,26 @@ public class S2JCRSessionFactoryImpl implements S2JCRSessionFactory {
 
         if (getRepository() == null) {
             throw new IllegalArgumentException("repository is required");
+        }
+
+        try {
+            NamespaceRegistry registry = getSession().getWorkspace()
+                    .getNamespaceRegistry();
+            String[] prefixes = registry.getPrefixes();
+            int size = prefixes.length;
+            boolean exist = false;
+            for (int i = 0; i < size; i++) {
+                if (S2JCRConstants.S2JCR_NAMESPACE_PREFIX.equals(prefixes[i])) {
+                    exist = true;
+                }
+            }
+            if (!exist) {
+                registry.registerNamespace(
+                        S2JCRConstants.S2JCR_NAMESPACE_PREFIX,
+                        S2JCRConstants.S2JCR_NAMESPACE_URI);
+            }
+        } catch (Exception e) {
+            // nothing
         }
     }
 
