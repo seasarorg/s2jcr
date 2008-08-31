@@ -50,6 +50,7 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
         try {
 
             JCRCommandDesc cmdDesc = getCommandDesc();
+            boolean versionable = cmdDesc.isVersionable();
 
             JCRDtoDesc dtoDesc = new JCRDtoDescImpl(args[0]);
             cmdDesc.setJCRDtoDesc(dtoDesc);
@@ -58,10 +59,17 @@ public class AddCommand extends AbstractAutoJCRXPathCommand {
 
             Node currentNode = jcrConverter.convertPathToNode(baseNode,
                     getTargetNodes());
-            currentNode.addMixin("mix:versionable"); // TODO cmdDesc
+            if (versionable) {
+                currentNode.addMixin("mix:versionable");
+            }
             jcrConverter.convertDtoToNode(currentNode, cmdDesc);
 
             session.save();
+
+            // checkin
+            if (versionable) {
+                currentNode.checkin();
+            }
 
         } catch (Throwable e) {
             throw new S2JCRCommonException("EJCR0001", e);

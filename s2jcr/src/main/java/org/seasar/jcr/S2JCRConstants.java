@@ -25,9 +25,9 @@ public class S2JCRConstants {
 
     public static final String XPATH_PREFIX = "//";
 
-    public static final String XPATH_SUFFIX = "_XPATH";
+    public static final String XPATH_QUERY_SUFFIX = "_XPATH_QUERY";
 
-    public static final String S2JCR_CLASS = "s2jcr:class";
+    public static final String S2JCR_CLASS_ATTR = "s2jcr:class";
 
     public static final String S2JCR_NAMESPACE_URI = "http://s2jcr.sandbox.seasar.org/1.0";
 

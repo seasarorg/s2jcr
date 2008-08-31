@@ -21,6 +21,7 @@ package org.seasar.jcr.rao;
  */
 public interface XPathEditStrategy {
 
-    public abstract String createXPath(Object targetFieldObject, Object[] args);
+    public abstract String createXPath(String path, Object targetFieldObject,
+            Object[] args);
 
 }

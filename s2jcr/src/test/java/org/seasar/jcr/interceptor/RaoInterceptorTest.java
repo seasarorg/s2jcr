@@ -21,16 +21,21 @@ import javax.jcr.Repository;
 
 import org.apache.jackrabbit.core.RepositoryImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
-import org.seasar.jcr.dto.FileNodeDto;
-import org.seasar.jcr.rao.FileNodeRao;
-import org.seasar.jcr.rao.PageNodeRao;
+import org.seasar.jcr.dto.FileNode1Dto;
+import org.seasar.jcr.dto.FileNode2Dto;
+import org.seasar.jcr.dto.FileNode3Dto;
+import org.seasar.jcr.rao.FileNode1Rao;
+import org.seasar.jcr.rao.FileNode2Rao;
+import org.seasar.jcr.rao.FileNode3Rao;
 import org.seasar.jcr.repository.RepositoryFactory;
 
 public class RaoInterceptorTest extends S2FrameworkTestCase {
 
-    private FileNodeRao fileNodeRao;
+    private FileNode1Rao fileNode1Rao;
 
-    private PageNodeRao pageNodeRao;
+    private FileNode2Rao fileNode2Rao;
+
+    private FileNode3Rao fileNode3Rao;
 
     public void setUp() {
         include("FileNodeRao.dicon");
@@ -48,55 +53,81 @@ public class RaoInterceptorTest extends S2FrameworkTestCase {
         super.tearDownBeforeContainerDestroy();
     }
 
-    public void testAdd() throws Exception {
+    public void testAdd1() throws Exception {
 
-        FileNodeDto dto = new FileNodeDto();
-        dto.setPath("/test/node");
+        FileNode1Dto dto = new FileNode1Dto();
+        dto.setPath("/test/one/node");
         dto.setDescription("test");
         dto.setTitle("titleName");
         dto.setPrice(new Double(1.25));
         dto.setHan(new Long(1));
         dto.setInputStream(null);
 
-        fileNodeRao.add(dto);
+        fileNode1Rao.add(dto);
 
     }
 
-    public void testAddP() throws Exception {
+    public void testAdd2() throws Exception {
 
-        FileNodeDto dto = new FileNodeDto();
-        dto.setPath("/test/page/node");
+        FileNode2Dto dto = new FileNode2Dto();
+        dto.setPath("/test/two/node");
         dto.setDescription("test");
         dto.setTitle("titleName");
         dto.setPrice(new Double(1.25));
         dto.setHan(new Long(1));
         dto.setInputStream(null);
 
-        pageNodeRao.add(dto);
+        fileNode2Rao.add(dto);
 
     }
 
-    public void testUpdate() throws Exception {
+    public void testAdd3() throws Exception {
 
-        FileNodeDto dto = new FileNodeDto();
-        dto.setPath("/test/node");
+        FileNode3Dto dto = new FileNode3Dto();
+        dto.setLocation("/test/three/node");
+        dto.setDescription("test");
+        dto.setTitle("titleName");
+        dto.setPrice(new Double(1.25));
+        dto.setHan(new Long(1));
+        dto.setInputStream(null);
+
+        fileNode3Rao.add(dto);
+
+    }
+
+    public void testUpdate1() throws Exception {
+
+        FileNode1Dto dto = new FileNode1Dto();
+        dto.setPath("/test/one/node");
         dto.setDescription("test55");
         dto.setTitle("titleName");
 
-        fileNodeRao.update(dto);
+        fileNode1Rao.update(dto);
 
         assertEquals(true, true);
 
     }
 
-    public void testGet() throws Exception {
+    public void testUpdate3() throws Exception {
 
-        FileNodeDto exampleDto = new FileNodeDto();
+        FileNode3Dto dto = new FileNode3Dto();
+        dto.setLocation("/test/three/node");
+        dto.setDescription("test55");
+        dto.setTitle("titleName");
+
+        fileNode3Rao.update(dto);
+
+        assertEquals(true, true);
+
+    }
+
+    public void testGet1() throws Exception {
+
+        FileNode1Dto exampleDto = new FileNode1Dto();
 
         exampleDto.setPrice(new Double(1.25));
 
-        // TODO
-        FileNodeDto dto = fileNodeRao.get(exampleDto);
+        FileNode1Dto dto = fileNode1Rao.get(exampleDto);
 
         assertEquals("test55", dto.getDescription());
         assertEquals("titleName", dto.getTitle());
@@ -105,31 +136,61 @@ public class RaoInterceptorTest extends S2FrameworkTestCase {
 
         exampleDto.setTitle("titleName2");
 
-        // TODO
-        dto = fileNodeRao.get(exampleDto);
+        dto = fileNode1Rao.get(exampleDto);
 
         assertNull(dto);
 
     }
 
-    public void testGetP() throws Exception {
+    public void testGet2() throws Exception {
 
-        FileNodeDto exampleDto = new FileNodeDto();
+        FileNode2Dto exampleDto = new FileNode2Dto();
+
+        exampleDto.setPath("/test/two/node");
+
+        FileNode2Dto dto = fileNode2Rao.get(exampleDto);
+
+        assertNull(dto);
+
+    }
+
+    public void testGet3() throws Exception {
+
+        FileNode3Dto exampleDto = new FileNode3Dto();
 
         exampleDto.setPrice(new Double(1.25));
 
-        // TODO
-        FileNodeDto dto = pageNodeRao.get(exampleDto);
+        FileNode3Dto dto = fileNode3Rao.get(exampleDto);
+
+        assertEquals("test55", dto.getDescription());
+        assertEquals("titleName", dto.getTitle());
+        assertEquals(new Double(1.25), dto.getPrice());
+        assertEquals(new Long(1), dto.getHan());
+
+        exampleDto.setTitle("titleName2");
+
+        dto = fileNode3Rao.get(exampleDto);
 
         assertNull(dto);
 
     }
 
-    public void testGetWithPrice() throws Exception {
+    public void testGetWithPrice1() throws Exception {
 
-        // TODO
-        FileNodeDto dto = fileNodeRao
-                .getWithPrice(new Double(1), new Double(2));
+        FileNode1Dto dto = fileNode1Rao.getWithPrice(new Double(1), new Double(
+                2));
+
+        assertEquals("test55", dto.getDescription());
+        assertEquals("titleName", dto.getTitle());
+        assertEquals(new Double(1.25), dto.getPrice());
+        assertEquals(new Long(1), dto.getHan());
+
+    }
+
+    public void testGetWithPrice3() throws Exception {
+
+        FileNode3Dto dto = fileNode3Rao.getWithPrice(new Double(1), new Double(
+                2));
 
         assertEquals("test55", dto.getDescription());
         assertEquals("titleName", dto.getTitle());
@@ -148,72 +209,82 @@ public class RaoInterceptorTest extends S2FrameworkTestCase {
     //        
     // }
 
-    public void testGet2() throws Exception {
+    public void testGetFoo1() throws Exception {
 
-        // TODO
-        FileNodeDto dto = fileNodeRao.get2();
-
-        assertEquals("test55", dto.getDescription());
-        assertEquals("titleName", dto.getTitle());
-
-    }
-
-    public void testGetPath() throws Exception {
-
-        FileNodeDto dto = fileNodeRao.get("/test/node");
+        FileNode1Dto dto = fileNode1Rao.getFoo();
 
         assertEquals("test55", dto.getDescription());
         assertEquals("titleName", dto.getTitle());
 
     }
 
-    public void testGetList() throws Exception {
+    public void testGetXPath1() throws Exception {
 
-        FileNodeDto exampleDto = new FileNodeDto();
+        FileNode1Dto dto = fileNode1Rao.get("//test/one/node");
 
-        // TODO
-        List dtos = fileNodeRao.find(exampleDto);
-
-        assertEquals(new Integer(dtos.size()), new Integer(2));
+        assertEquals("test55", dto.getDescription());
+        assertEquals("titleName", dto.getTitle());
 
     }
 
-    public void testDelete() throws Exception {
+    public void testGetList1() throws Exception {
 
-        // FileNodeDto dto = new FileNodeDto();
-        // dto.setDescription("test55");
-        // dto.setTitle("titleNameZ");
+        FileNode1Dto exampleDto = new FileNode1Dto();
 
-        fileNodeRao.delete("/test/node");
+        List dtos = fileNode1Rao.find(exampleDto);
+
+        assertEquals(new Integer(dtos.size()), new Integer(1));
+
+    }
+
+    public void testDelete1() throws Exception {
+
+        fileNode1Rao.delete("/test/one/node");
 
         assertEquals(true, true);
 
     }
 
-    public void testDeleteP() throws Exception {
+    public void testDelete2() throws Exception {
 
-        FileNodeDto dto = new FileNodeDto();
-        dto.setPath("/test/page/node");
-        pageNodeRao.delete(dto);
+        FileNode2Dto dto = new FileNode2Dto();
+        dto.setPath("/test/two/node");
+        fileNode2Rao.delete(dto);
 
         assertEquals(true, true);
 
     }
 
-    public FileNodeRao getRao() {
-        return fileNodeRao;
+    public void testDelete3() throws Exception {
+
+        fileNode1Rao.delete("/test/three/node");
+
+        assertEquals(true, true);
+
     }
 
-    public void setRao(FileNodeRao rao) {
-        this.fileNodeRao = rao;
+    public FileNode1Rao getFileNode1Rao() {
+        return fileNode1Rao;
     }
 
-    public PageNodeRao getPrao() {
-        return pageNodeRao;
+    public void setFileNode1Rao(FileNode1Rao fileNode1Rao) {
+        this.fileNode1Rao = fileNode1Rao;
     }
 
-    public void setPrao(PageNodeRao prao) {
-        this.pageNodeRao = prao;
+    public FileNode2Rao getFileNode2Rao() {
+        return fileNode2Rao;
+    }
+
+    public void setFileNode2Rao(FileNode2Rao fileNode2Rao) {
+        this.fileNode2Rao = fileNode2Rao;
+    }
+
+    public FileNode3Rao getFileNode3Rao() {
+        return fileNode3Rao;
+    }
+
+    public void setFileNode3Rao(FileNode3Rao fileNode3Rao) {
+        this.fileNode3Rao = fileNode3Rao;
     }
 
 }

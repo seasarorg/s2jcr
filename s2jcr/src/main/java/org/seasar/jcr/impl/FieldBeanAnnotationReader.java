@@ -50,7 +50,7 @@ public class FieldBeanAnnotationReader implements BeanAnnotationReader {
         for (int i = 0; i < size; i++) {
             String name = beanDesc.getField(i).getName();
             if (name.endsWith(PATH_SUFFIX)) {
-                return name;
+                return name.substring(0, name.length() - PATH_SUFFIX.length());
             }
         }
         return "path"; // default

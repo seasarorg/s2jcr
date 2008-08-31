@@ -19,7 +19,9 @@ import java.util.Iterator;
 
 import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
+import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.rao.XPathEditStrategy;
+import org.seasar.jcr.util.JCRUtil;
 
 /**
  * @author waki41
@@ -34,34 +36,45 @@ public class QBEStrategy implements XPathEditStrategy {
      * org.seasar.jcr.rao.XPathEditStrategy#createXPath(org.seasar.jcr.JCRDtoDesc
      * )
      */
-    public String createXPath(Object targetFieldObject, Object[] args) {
+    public String createXPath(String path, Object targetFieldObject,
+            Object[] args) {
 
         JCRCommandDesc cmdDesc = (JCRCommandDesc) targetFieldObject;
         JCRDtoDesc dtoDesc = cmdDesc.getJCRDtoDesc();
 
-        if (dtoDesc.getFieldValueMap().keySet().size() == 0)
-            return "";
-
         StringBuffer sb = new StringBuffer();
+        if (dtoDesc.getFieldValueMap().keySet().size() > 0) {
+            for (Iterator iter = dtoDesc.getFieldValueMap().keySet().iterator(); iter
+                    .hasNext();) {
+                if (sb.length() > 0)
+                    sb.append(" and ");
 
-        for (Iterator iter = dtoDesc.getFieldValueMap().keySet().iterator(); iter
-                .hasNext();) {
+                String propertyName = (String) iter.next();
+                Object propertyValue = dtoDesc.getFieldValueMap().get(
+                        propertyName);
 
-            if (sb.length() > 0)
-                sb.append(" and ");
+                sb.append("@");
+                sb.append(propertyName);
+                sb.append("='");
+                sb.append(propertyValue);
+                sb.append("'");
 
-            String propertyName = (String) iter.next();
-            Object propertyValue = dtoDesc.getFieldValueMap().get(propertyName);
-
-            sb.append("@");
-            sb.append(propertyName);
-            sb.append("='");
-            sb.append(propertyValue);
-            sb.append("'");
-
+            }
         }
 
-        return "[" + sb.toString() + "]";
+        // S2JCR_CLASS_ATTR
+        if (sb.length() > 0)
+            sb.append(" and ");
+        sb.append("@");
+        sb.append(S2JCRConstants.S2JCR_CLASS_ATTR);
+        sb.append("='");
+        sb.append(JCRUtil.getClassName(cmdDesc.getTargetDtoClass()));
+        sb.append("'");
+        if (cmdDesc.isVersionable()) {
+            sb.append(" and @jcr:isCheckedOut");
+        }
+
+        return path + "[" + sb.toString() + "]";
     }
 
 }

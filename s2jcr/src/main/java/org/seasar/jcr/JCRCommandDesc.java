@@ -43,4 +43,7 @@ public interface JCRCommandDesc {
     BeanDesc getBeanDesc();
 
     String getPathProperty();
+
+    boolean isVersionable();
+
 }

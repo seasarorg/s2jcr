@@ -29,6 +29,10 @@ import org.seasar.jcr.rao.CommandType;
 
 public class JCRCommandDescImpl implements JCRCommandDesc {
 
+    public static final String VERSIONABLE = "VERSIONABLE";
+
+    public static final String BEAN = "BEAN";
+
     private BeanDesc beanDesc;
 
     private Class raoClass;
@@ -43,6 +47,8 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
     private String pathProperty;
 
+    private boolean versionable;
+
     public JCRCommandDescImpl(Method method, Class raoClass,
             AnnotationReaderFactory annotationReaderFactory) {
 
@@ -51,7 +57,19 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
         this.annotationReaderFactory = annotationReaderFactory;
 
         this.beanDesc = BeanDescFactory.getBeanDesc(raoClass);
-        this.targetDtoClass = (Class) beanDesc.getFieldValue("BEAN", raoClass);
+        this.targetDtoClass = (Class) beanDesc.getFieldValue(BEAN, raoClass);
+
+        try {
+            Boolean value = (Boolean) beanDesc.getFieldValue(VERSIONABLE,
+                    raoClass);
+            if (value != null && !value.booleanValue()) {
+                versionable = false;
+            } else {
+                versionable = true;
+            }
+        } catch (Exception e) {
+            versionable = true;
+        }
 
         BeanAnnotationReader annotationReader = annotationReaderFactory
                 .createBeanAnnotationReader(targetDtoClass);
@@ -86,6 +104,14 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
     public void setPathProperty(String pathProperty) {
         this.pathProperty = pathProperty;
+    }
+
+    public boolean isVersionable() {
+        return versionable;
+    }
+
+    public void setVersionable(boolean versionable) {
+        this.versionable = versionable;
     }
 
     public String getPath() {
@@ -131,7 +157,8 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
     public CommandType getCommandType(Class dtoClass, Object[] args) {
 
         try {
-            getAnnotationField(method.getName() + S2JCRConstants.XPATH_SUFFIX);
+            getAnnotationField(method.getName()
+                    + S2JCRConstants.XPATH_QUERY_SUFFIX);
 
             return CommandType.AUTO_XPATH_ANNOTATION;
 
@@ -144,7 +171,7 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
 
             String objClassName = args[0].getClass().getName();
             if (objClassName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
-                return CommandType.AUTO_DTO; // TODO XPATH
+                return CommandType.AUTO_DTO;
             }
 
         }

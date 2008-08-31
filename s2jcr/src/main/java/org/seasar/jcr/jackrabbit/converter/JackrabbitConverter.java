@@ -41,6 +41,7 @@ import org.seasar.jcr.JCRCommandDesc;
 import org.seasar.jcr.JCRDtoDesc;
 import org.seasar.jcr.S2JCRConstants;
 import org.seasar.jcr.converter.JcrConverter;
+import org.seasar.jcr.util.JCRUtil;
 
 public class JackrabbitConverter implements JcrConverter {
 
@@ -103,8 +104,8 @@ public class JackrabbitConverter implements JcrConverter {
             }
         }
 
-        targetNode.setProperty(S2JCRConstants.S2JCR_CLASS, dtoDesc
-                .getDtoClass().toString());
+        targetNode.setProperty(S2JCRConstants.S2JCR_CLASS_ATTR, JCRUtil
+                .getClassName(dtoDesc.getDtoClass()));
 
     }
 
@@ -213,13 +214,11 @@ public class JackrabbitConverter implements JcrConverter {
         Class dtoClass = cmdDesc.getTargetDtoClass();
 
         // check S2JCR_CLASS
-        if (!checkNodeClass(src, dtoClass.toString())) {
+        if (!checkNodeClass(src, JCRUtil.getClassName(dtoClass))) {
             return null;
         }
 
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dtoClass);
-
-        String pathProperty = cmdDesc.getPathProperty();
 
         int propertyDescSize = destBeanDesc.getPropertyDescSize();
         Object returnObject = dtoClass.newInstance();
@@ -239,13 +238,20 @@ public class JackrabbitConverter implements JcrConverter {
             destPropertyDesc.setValue(returnObject, fieldObject);
         }
 
+        // overwrite path
+        String pathProperty = cmdDesc.getPathProperty();
+        PropertyDesc destPropertyDesc = destBeanDesc
+                .getPropertyDesc(pathProperty);
+        destPropertyDesc.setValue(returnObject, src.getPath());
+
         return returnObject;
 
     }
 
     private boolean checkNodeClass(Node src, String className) {
         try {
-            Property property = src.getProperty(S2JCRConstants.S2JCR_CLASS);
+            Property property = src
+                    .getProperty(S2JCRConstants.S2JCR_CLASS_ATTR);
             if (property != null) {
                 String clsName = property.getString();
                 if (clsName.equals(className)) {

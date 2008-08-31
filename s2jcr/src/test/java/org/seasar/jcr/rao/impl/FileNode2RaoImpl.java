@@ -21,28 +21,37 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.seasar.jcr.dto.FileNodeDto;
+import org.seasar.framework.util.StringUtil;
+import org.seasar.jcr.S2JCRConstants;
+import org.seasar.jcr.dto.FileNode2Dto;
 import org.seasar.jcr.rao.AbstractRao;
-import org.seasar.jcr.rao.PageNodeRao;
+import org.seasar.jcr.rao.FileNode2Rao;
 
 /**
  * @author waki41
  * 
  */
-public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
+public class FileNode2RaoImpl extends AbstractRao implements FileNode2Rao {
 
     /*
      * (non-Javadoc)
      * 
      * @see org.seasar.jcr.rao.PageNodeRao#add(org.seasar.jcr.dto.FileNodeDto)
      */
-    public void add(FileNodeDto dto) {
+    public void add(FileNode2Dto dto) {
 
         try {
             Session session = getSession();
             Node node = session.getRootNode();
-            Node wakiNode = node.addNode("waki");
-            wakiNode.setProperty("name", "waki");
+            String[] paths = dto.getPath().split("/");
+            for (int i = 0; i < paths.length; i++) {
+                if (!StringUtil.isEmpty(paths[i])) {
+                    node = node.addNode(paths[i]);
+                }
+            }
+            node.setProperty("title", dto.getTitle()); // TODO
+            node.setProperty(S2JCRConstants.S2JCR_CLASS_ATTR, dto.getClass()
+                    .toString());
             session.save();
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -55,17 +64,22 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * 
      * @see org.seasar.jcr.rao.PageNodeRao#get(org.seasar.jcr.dto.FileNodeDto)
      */
-    public FileNodeDto get(FileNodeDto nodePath) {
-        try {
-            Session session = getSession();
-            Node node = session.getRootNode();
-            Node wakiNode = node.getNode("waki");
-            String wakiName = wakiNode.getProperty("name").getString();
-            System.out.println("name=" + wakiName);
-            session.save();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
+    public FileNode2Dto get(FileNode2Dto dto) {
+        // TODO
+        // try {
+        // Session session = getSession();
+        // Node node = session.getRootNode();
+        // String[] paths = dto.getPath().split("/");
+        // for (int i = 0; i < paths.length; i++) {
+        // if (!StringUtil.isEmpty(paths[i])) {
+        // node = node.addNode(paths[i]);
+        // }
+        // }
+        //            
+        // session.save();
+        // } catch (RepositoryException e) {
+        // e.printStackTrace();
+        // }
 
         return null;
     }
@@ -75,7 +89,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * 
      * @see org.seasar.jcr.rao.PageNodeRao#getWithNodePath(java.lang.String)
      */
-    public FileNodeDto getWithNodePath(String nodePath) {
+    public FileNode2Dto getWithNodePath(String nodePath) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -85,7 +99,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * 
      * @see org.seasar.jcr.rao.PageNodeRao#get2()
      */
-    public FileNodeDto get2() {
+    public FileNode2Dto get2() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -95,7 +109,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * 
      * @see org.seasar.jcr.rao.PageNodeRao#find(org.seasar.jcr.dto.FileNodeDto)
      */
-    public List find(FileNodeDto nodePath) {
+    public List find(FileNode2Dto nodePath) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -106,7 +120,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * @see
      * org.seasar.jcr.rao.PageNodeRao#update(org.seasar.jcr.dto.FileNodeDto)
      */
-    public Object update(FileNodeDto dto) {
+    public Object update(FileNode2Dto dto) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -117,7 +131,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * @see
      * org.seasar.jcr.rao.PageNodeRao#delete(org.seasar.jcr.dto.FileNodeDto)
      */
-    public void delete(FileNodeDto dto) {
+    public void delete(FileNode2Dto dto) {
         // TODO Auto-generated method stub
 
     }
@@ -128,7 +142,7 @@ public class PageNodeRaoImpl extends AbstractRao implements PageNodeRao {
      * @see org.seasar.jcr.rao.PageNodeRao#getWithPrice(java.lang.Double,
      * java.lang.Double)
      */
-    public FileNodeDto getWithPrice(Double minimum, Double maximum) {
+    public FileNode2Dto getWithPrice(Double minimum, Double maximum) {
         // TODO Auto-generated method stub
         return null;
     }

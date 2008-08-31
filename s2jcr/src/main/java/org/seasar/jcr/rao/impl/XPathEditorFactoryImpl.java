@@ -30,9 +30,9 @@ public class XPathEditorFactoryImpl implements XPathEditorFactory {
         if (cmdType == CommandType.DEFAULT) {
             return new DefaultStrategy();
         } else if (cmdType == CommandType.AUTO_DTO) {
-            return new QBEStrategy(); // TODO XPATH
+            return new QBEStrategy();
         } else if (cmdType == CommandType.AUTO_XPATH_ANNOTATION) {
-            return new XPathStrategy();
+            return new XPathQueryStrategy();
         } else {
             return null;
         }

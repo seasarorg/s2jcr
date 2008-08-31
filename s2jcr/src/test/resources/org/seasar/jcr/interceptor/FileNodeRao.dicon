@@ -4,10 +4,16 @@
 <components>
 	<include path="j2ee.dicon"/>
 	<include path="s2jcr.dicon"/>
-	<component class="org.seasar.jcr.rao.FileNodeRao">
+	<component class="org.seasar.jcr.rao.FileNode1Rao">
 		<aspect>s2jcr.interceptor</aspect>
+		<aspect>j2ee.requiredTx</aspect>
 	</component>
-	<component name="pageNodeRao" class="org.seasar.jcr.rao.impl.PageNodeRaoImpl">
+	<component class="org.seasar.jcr.rao.impl.FileNode2RaoImpl">
 		<aspect>s2jcr.interceptor</aspect>
+		<aspect>j2ee.requiredTx</aspect>
+	</component>
+	<component class="org.seasar.jcr.rao.FileNode3Rao">
+		<aspect>s2jcr.interceptor</aspect>
+		<aspect>j2ee.requiredTx</aspect>
 	</component>
 </components>

@@ -17,30 +17,30 @@ package org.seasar.jcr.rao;
 
 import java.util.List;
 
-import org.seasar.jcr.dto.FileNodeDto;
+import org.seasar.jcr.dto.FileNode1Dto;
 
-public interface FileNodeRao {
+public interface FileNode1Rao {
 
-    public Class BEAN = FileNodeDto.class;
+    public Class BEAN = FileNode1Dto.class;
 
-    public String getWithPrice_XPATH = "@price > ? and @price < ?";
+    public String getWithPrice_XPATH_QUERY = "@price > ? and @price < ?";
 
-    public void add(FileNodeDto dto);
+    public void add(FileNode1Dto dto);
 
-    public FileNodeDto get(FileNodeDto nodePath);
+    public FileNode1Dto get(FileNode1Dto nodePath);
 
-    public FileNodeDto get(String id);
+    public FileNode1Dto get(String id);
 
-    public FileNodeDto getWithNodePath(String nodePath);
+    public FileNode1Dto getWithNodePath(String nodePath);
 
-    public FileNodeDto get2();
+    public FileNode1Dto getFoo();
 
-    public List find(FileNodeDto nodePath);
+    public List find(FileNode1Dto nodePath);
 
-    public Object update(FileNodeDto dto);
+    public Object update(FileNode1Dto dto);
 
     public void delete(String title);
 
-    public FileNodeDto getWithPrice(Double minimum, Double maximum);
+    public FileNode1Dto getWithPrice(Double minimum, Double maximum);
 
 }

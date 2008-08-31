@@ -21,6 +21,10 @@ public class JCRUtil {
 
     private static final String TRUE = "true";
 
+    public static String getClassName(Class cls) {
+        return cls.getName();
+    }
+
     public static boolean supportsLevel2(Repository repository) {
         return TRUE.equals(repository
                 .getDescriptor(Repository.LEVEL_2_SUPPORTED));

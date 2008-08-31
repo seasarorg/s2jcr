@@ -60,7 +60,7 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
         try {
             String path = getPath();
             if (path.startsWith("/")) {
-                path = path.replaceFirst("^/+", "");
+                path = path.replaceFirst("^/+", ""); // remove first /.
             }
             String nodePath = S2JCRConstants.XPATH_PREFIX + path;
 
@@ -76,17 +76,23 @@ public class UpdateCommand extends AbstractAutoJCRXPathCommand {
             Node[] cloneNodes = new Node[(int) queryResultNodeIterator
                     .getSize()];
 
+            boolean versionable = cmdDesc.isVersionable();
             while (queryResultNodeIterator.hasNext()) {
 
                 Node node = queryResultNodeIterator.nextNode();
-                node.checkout();
+                if (versionable) {
+                    node.checkout();
+                }
                 jcrConverter.convertDtoToNode(node, cmdDesc);
                 cloneNodes[i] = node;
                 i++;
             }
 
             session.save();
-            checkin(cloneNodes);
+
+            if (versionable) {
+                checkin(cloneNodes);
+            }
 
         } catch (Throwable e) {
 

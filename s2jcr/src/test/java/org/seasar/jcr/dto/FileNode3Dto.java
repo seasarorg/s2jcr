@@ -17,10 +17,10 @@ package org.seasar.jcr.dto;
 
 import java.io.InputStream;
 
-public class FileNodeDto {
-    public static final String description_PROPERTY = "desc";
+public class FileNode3Dto {
+    public static final String location_PATH = null;
 
-    private String path;
+    private String location;
 
     private String title;
 
@@ -32,12 +32,12 @@ public class FileNodeDto {
 
     private InputStream inputStream;
 
-    public String getPath() {
-        return path;
+    public String getLocation() {
+        return location;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Long getHan() {

@@ -62,15 +62,21 @@ public class DeleteCommand extends AbstractAutoJCRXPathCommand {
 
             QueryResult queryResult = query.execute();
 
+            boolean versionable = cmdDesc.isVersionable();
             NodeIterator queryResultNodeIterator = queryResult.getNodes();
             nodeCount = queryResultNodeIterator.getSize();
             while (queryResultNodeIterator.hasNext()) {
 
                 Node node = queryResultNodeIterator.nextNode();
+                if (versionable) {
+                    node.checkout();
+                }
                 node.remove();
             }
 
             session.save();
+
+            // TODO checkin?
 
         } catch (Throwable e) {
 

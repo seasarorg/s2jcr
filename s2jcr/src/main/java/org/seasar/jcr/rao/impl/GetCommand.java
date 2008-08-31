@@ -67,16 +67,14 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
             JCRDtoDesc dtoDesc = createJCRDtoDesc(cmdType, args);
             cmdDesc.setJCRDtoDesc(dtoDesc);
 
-            String nodePath = S2JCRConstants.XPATH_PREFIX + getPath();
-
             XPathEditStrategy strategy = XPathEditorFactoryImpl
                     .createXPathEditor(cmdType);
 
-            String xpath = strategy.createXPath(cmdDesc, args);
-            nodePath = nodePath + xpath;
+            String xpath = strategy.createXPath(S2JCRConstants.XPATH_PREFIX
+                    + getPath().replaceFirst("^/+", ""), cmdDesc, args);
 
             QueryManager qm = session.getWorkspace().getQueryManager();
-            Query query = qm.createQuery(nodePath, Query.XPATH);
+            Query query = qm.createQuery(xpath, Query.XPATH);
             QueryResult queryResult = query.execute();
 
             returnList = jcrConverter.convertQResultToDto(queryResult, cmdDesc);
@@ -103,7 +101,7 @@ public class GetCommand extends AbstractAutoJCRXPathCommand {
     private JCRDtoDesc createJCRDtoDesc(CommandType cmdType, Object[] args) {
         try {
             if (cmdType == CommandType.AUTO_DTO) {
-                return new JCRDtoDescImpl(args[0]); // TODO XPATH
+                return new JCRDtoDescImpl(args[0]);
             } else if (cmdType == CommandType.DEFAULT) {
                 return new JCRDtoDescImpl(getCommandDesc().getTargetDtoClass()
                         .newInstance());
