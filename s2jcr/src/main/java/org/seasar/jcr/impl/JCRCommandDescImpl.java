@@ -172,6 +172,8 @@ public class JCRCommandDescImpl implements JCRCommandDesc {
             String objClassName = args[0].getClass().getName();
             if (objClassName.endsWith(S2JCRConstants.DTO_SUFFIX)) {
                 return CommandType.AUTO_DTO;
+            } else if (objClassName.indexOf(S2JCRConstants.ENTITY) >= 0) {
+                return CommandType.AUTO_DTO;
             }
 
         }

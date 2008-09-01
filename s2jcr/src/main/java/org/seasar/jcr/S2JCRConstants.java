@@ -23,6 +23,8 @@ public class S2JCRConstants {
 
     public static final String DTO_SUFFIX = "Dto";
 
+    public static final String ENTITY = ".entity.";
+
     public static final String XPATH_PREFIX = "//";
 
     public static final String XPATH_QUERY_SUFFIX = "_XPATH_QUERY";
