@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components.dtd">
+<components namespace="s2jcr">
+
+    <component name="repositoryFactory"
+        class="org.seasar.jcr.jackrabbit.repository.JackrabbitRepositoryFactory">
+        <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/WEB-INF/jcr/repository.xml")</arg>
+        <arg>container.getComponent(@java.lang.Class@forName("javax.servlet.ServletContext")).getRealPath("/WEB-INF/jcr")</arg>
+    </component>
+
+    <component name="sessionFactory"
+        class="org.seasar.jcr.impl.S2JCRSessionFactoryImpl">
+        <arg>repositoryFactory</arg>
+    </component>
+
+    <component name="interceptor" 
+        class="org.seasar.jcr.interceptor.RaoInterceptor"/>
+
+	<component class="org.seasar.jcr.impl.FieldAnnotationReaderFactory" />
+	
+	<component class="org.seasar.jcr.rao.impl.RaoMetaDataFactoryImpl" />
+
+    <component name="jcrConverter"
+        class="org.seasar.jcr.jackrabbit.converter.JackrabbitConverter">
+    </component>
+
+</components>
+
